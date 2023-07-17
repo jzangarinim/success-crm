@@ -1,8 +1,11 @@
 import React, { useState, useEffect, useContext } from "react";
+import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { Context } from "../store/appContext";
 import test_projects from "C://4GeeksAcademy/MOCK_DATA.json";
 
 export const Projects = () => {
+  let navigate = useNavigate();
   const [data, setData] = useState(test_projects);
   const { store } = useContext(Context);
   const { user } = store;
@@ -13,7 +16,7 @@ export const Projects = () => {
       event.target.parentNode.id.includes("edit")
     ) {
       if (user.role === "admin") {
-        console.log("You have permission to edit");
+        navigate("/projects/edit");
       }
     }
   }
@@ -27,6 +30,7 @@ export const Projects = () => {
       }
     }
   }
+
   return (
     <>
       <div className="container">
@@ -79,14 +83,15 @@ export const Projects = () => {
                         user.role != "admin" ? "d-none" : ""
                       }`}
                     >
-                      <button
+                      <Link
+                        to={`/projects/edit/${project.id}`}
                         type="button"
                         className="btn btn-secondary me-1"
                         id={`edit-button${index}`}
                         onClick={handleEdit}
                       >
                         <i className="fa-regular fa-pen-to-square"></i>
-                      </button>
+                      </Link>
                       <button
                         type="button"
                         className="btn btn-danger"
