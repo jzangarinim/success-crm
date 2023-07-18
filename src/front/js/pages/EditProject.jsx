@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useParams } from "react-router-dom";
 import test_projects from "C://4GeeksAcademy/MOCK_DATA.json";
+import { EmployeeList } from "../component/EmployeeList.jsx";
 
 export const EditProject = () => {
   const [project, setProject] = useState({});
@@ -28,12 +29,12 @@ export const EditProject = () => {
             <div className="row g-0">
               <div className="col-md-12">
                 <div className="card-body">
-                  <div class="mb-3">
+                  <div className="mb-3">
                     <input
                       type="text"
-                      class="form-control"
+                      className="form-control"
                       id="exampleFormControlInput1"
-                      value={project?.project_name}
+                      defaultValue={project?.project_name}
                       placeholder="Project Title"
                     />
                   </div>
@@ -42,19 +43,21 @@ export const EditProject = () => {
                   </div> */}
                   <div className="d-flex justify-content-center mt-3">
                     <div className="col-3 border-end">
-                      <div className="text-body-secondary text-start p-2 rounded mb-1">
+                      <div className="text-body-secondary p-2 mb-1">
                         ► Manager: {project?.account_manager_name}
+                        <EmployeeList role="Head" />
                       </div>
-                      <div className="text-body-secondary p-2 rounded mb-1">
+                      <div className="text-body-secondary p-2 mb-1">
                         ► Assistant: {project?.assistant_name}
+                        <EmployeeList role="Virtual" />
                       </div>
-                      <div className="text-body-secondary p-2 rounded mb-1">
+                      <div className="text-body-secondary p-2 mb-1">
                         ► Customer: {project?.customer_name}
                       </div>
-                      <div className="text-body-secondary p-2 rounded mb-1">
+                      <div className="text-body-secondary p-2 mb-1">
                         ► Start date: {formatDate(project?.start_date)}
                       </div>
-                      <div className="text-body-secondary p-2 rounded mb-1">
+                      <div className="text-body-secondary p-2 mb-1">
                         ► End date:{" "}
                         {project?.end_date === null
                           ? "Ongoing"
@@ -66,6 +69,7 @@ export const EditProject = () => {
                       <p className="card-text">{project?.description}</p>
                     </div>
                   </div>
+                  <div>hola</div>
                 </div>
               </div>
             </div>
