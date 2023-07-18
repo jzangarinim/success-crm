@@ -27,31 +27,44 @@ export const EditProject = () => {
           <div className="card mb-3 p-0 border border-warning">
             <div className="row g-0">
               <div className="col-md-12">
-                <div className="card-body d-flex justify-content-evenly">
-                  <div className="col-3">
-                    <h5 className="card-title fs-1">{project?.project_name}</h5>
-                    <div className="text-body-secondary text-start p-2 rounded mb-1">
-                      ► Manager: {project?.account_manager_name}
-                    </div>
-                    <div className="text-body-secondary p-2 rounded mb-1">
-                      ► Assistant: {project?.assistant_name}
-                    </div>
-                    <div className="text-body-secondary p-2 rounded mb-1">
-                      ► Customer: {project?.customer_name}
-                    </div>
-                    <div className="text-body-secondary p-2 rounded mb-1">
-                      ► Start date: {formatDate(project?.start_date)}
-                    </div>
-                    <div className="text-body-secondary p-2 rounded mb-1">
-                      ► End date:{" "}
-                      {project?.end_date === null
-                        ? "Ongoing"
-                        : formatDate(project?.end_date)}
-                    </div>
+                <div className="card-body">
+                  <div class="mb-3">
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="exampleFormControlInput1"
+                      value={project?.project_name}
+                      placeholder="Project Title"
+                    />
                   </div>
-                  <div className="card-text d-flex flex-column">
-                    <h5 className="card-title fs-4">Description</h5>
-                    <p className="card-text">{project?.description}</p>
+                  {/* <div className="border-bottom">
+                    <h5 className="card-title fs-1">{project?.project_name}</h5>
+                  </div> */}
+                  <div className="d-flex justify-content-center mt-3">
+                    <div className="col-3 border-end">
+                      <div className="text-body-secondary text-start p-2 rounded mb-1">
+                        ► Manager: {project?.account_manager_name}
+                      </div>
+                      <div className="text-body-secondary p-2 rounded mb-1">
+                        ► Assistant: {project?.assistant_name}
+                      </div>
+                      <div className="text-body-secondary p-2 rounded mb-1">
+                        ► Customer: {project?.customer_name}
+                      </div>
+                      <div className="text-body-secondary p-2 rounded mb-1">
+                        ► Start date: {formatDate(project?.start_date)}
+                      </div>
+                      <div className="text-body-secondary p-2 rounded mb-1">
+                        ► End date:{" "}
+                        {project?.end_date === null
+                          ? "Ongoing"
+                          : formatDate(project?.end_date)}
+                      </div>
+                    </div>
+                    <div className="card-text ms-3">
+                      <h5 className="card-title fs-4">Description</h5>
+                      <p className="card-text">{project?.description}</p>
+                    </div>
                   </div>
                 </div>
               </div>
