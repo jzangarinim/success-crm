@@ -206,4 +206,56 @@ def get_one_project(project_id=None):
         else:
             return jsonify({"message": "project not found"}), 404
     else:
-        return jsonify({"message": "bad request"}), 400
+        return jsonify({"message":"bad request"}), 400
+        
+# /projects endpoints
+@api.route('/projects', methods=['GET'])
+def get_projects():
+    projects = Project()
+    projects = projects.query.all()
+    projects = list(map(lambda item: item.serialize(), projects))
+    return jsonify(projects)
+
+@api.route('/projects/<int:project_id>', methods=['GET'])
+def get_one_project(project_id = None):
+    if project_id is not None:
+        project = Project()
+        project = project.query.get(project_id)
+        if project is not None:
+            return jsonify(project.serialize()), 200
+        else:
+            return jsonify({"message":"project not found"}), 404
+    else:
+        return jsonify({"message":"bad request"}), 400
+
+@api.route('/projects/<int:project_id>', methods=['PUT'])
+def edit_project(project_id = None):
+    if project_id is not None:
+        project = Project.query.get(project_id)
+        if project is not None:
+            data = request.json
+            name = data["project_name"]
+            manager = data["account_manager_id"]
+            assistant = data["assistant_id"]
+            customer = data["customer_id"]
+            description = data["description"]
+            start = data["start_date"]
+            end = data["end_date"]
+            project.project_name = name
+            project.account_manager_id = manager
+            project.assistant_id = assistant
+            project.customer_id = customer
+            project.description = description
+            project.start_date = start
+            project.end_date = end
+            try:
+                db.session.commit()
+                return jsonify({"message":"project updated successfully"}), 200
+            except Exception as error:
+                print(error)
+                db.session.rollback()
+                return jsonify({"message":"error while editing project"})
+        else:
+            return jsonify({"message":"project not found"}), 404
+    else:
+        return jsonify({"message":"bad request"}), 400

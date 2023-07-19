@@ -100,6 +100,21 @@ class Project(db.Model):
         }
 
 
+    def __repr__(self):
+        return f'<Project {self.project_name}>'
+    
+    def serialize(self):
+        return {
+            "id": self.id,
+            "project_name": self.project_name,
+            "account_manager_id": self.account_manager_id,
+            "assistant_id": self.assistant_id,
+            "customer_id": self.customer_id,
+            "description": self.description,
+            "start_date": self.start_date,
+            "end_date": self.end_date
+        }
+
 class Customer(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     company_logo_url = db.Column(db.String(256), nullable=True)
