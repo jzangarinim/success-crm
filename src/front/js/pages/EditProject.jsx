@@ -33,7 +33,7 @@ export const EditProject = () => {
       <div className="container-fluid col-9 mt-3">
         <div className="row col-1 mb-3">
           <Link type="button" className="btn btn-success p-0" to="/projects">
-            {`< Go back`}
+            <i className="fa-solid fa-arrow-left"></i>
           </Link>
         </div>
         <div className="row">
