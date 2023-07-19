@@ -76,7 +76,7 @@ class Project(db.Model):
         }
 
 class Customer(db.Model):
-    project_id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.Integer, primary_key=True)
     company_logo_url = db.Column(db.String(256), nullable=True)
     company_name = db.Column(db.String(60), nullable=False)
     company_address = db.Column(db.String(80), nullable=False)
