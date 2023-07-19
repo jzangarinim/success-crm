@@ -7,6 +7,22 @@ api = Blueprint('api', __name__)
 # /users endpoints
 
 
+@api.route('/projects/<int:project_id>', methods=['GET'])
+def get_project(project_id=None):
+    data = request.jason
+
+    if project_id is not None:
+        projects = Project()
+        projects = Project.query.filter_by(
+            project_id=data.get("project_id")).first()
+        if projects is not None:
+            return jsonify(projects.serialize()), 200
+        else:
+            return jsonify({"message": "Project not found"}), 404
+    else:
+        return jsonify({"message": "bad request"}), 400
+
+
 @api.route('/projects/<int:project_id>', methods=['PUT'])
 def edit_project():
     data = request.json
@@ -101,30 +117,33 @@ def get_department(department=None):
     else:
         return jsonify({"message": "bad request"}), 400
 
+
 @api.route('/users/<int:user_id>', methods=['GET'])
-def get_one_user(user_id = None):
+def get_one_user(user_id=None):
     if user_id is not None:
         users = User()
         users = users.query.get(user_id)
         if users is not None:
             return jsonify(users.serialize()), 200
         else:
-            return jsonify({"message":"user not found"}), 404
+            return jsonify({"message": "user not found"}), 404
     else:
-        return jsonify({"message":"bad request"}), 400
+        return jsonify({"message": "bad request"}), 400
+
 
 @api.route('/users/<department>', methods=['GET'])
-def get_department(department = None):
+def get_department(department=None):
     if department == "hr" or department == "sales" or department == "finances" or department == "trial" or department == "recruitment":
         users = User()
-        users = users.query.filter_by(department = department).all()
+        users = users.query.filter_by(department=department).all()
         users = list(map(lambda item: item.serialize(), users))
         if len(users) != 0:
             return jsonify(users), 200
         else:
-            return jsonify({"message":"no users found"}), 404
+            return jsonify({"message": "no users found"}), 404
     else:
-        return jsonify({"message":"bad request"}), 400
+        return jsonify({"message": "bad request"}), 400
+
 
 @api.route('/users', methods=['POST'])
 def add_user():
@@ -165,6 +184,8 @@ def add_user():
                 return jsonify({"message": error.args}), 500
 
 # /customers endpoints
+
+
 @api.route('/customers', methods=['GET'])
 def get_customers():
     customers = Customer()
