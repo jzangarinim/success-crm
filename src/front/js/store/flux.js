@@ -5,7 +5,7 @@ const getState = ({ getStore, getActions, setStore }) => {
         name: "jose",
         last_name: "zangarini",
         role: "admin",
-      },
+       },
 			users: [],
 			id: "",
       project: { 
@@ -17,7 +17,6 @@ const getState = ({ getStore, getActions, setStore }) => {
     },
     },
     actions: {
-
       Project : async(project) =>{
         const store = getStore();
         const actions = getActions();
@@ -85,6 +84,40 @@ const getState = ({ getStore, getActions, setStore }) => {
 
         //reset the global store
         setStore({ demo: demo });
+      },
+      editProject: async (
+        id,
+        title,
+        managerId,
+        assistantId,
+        customerId,
+        description,
+        startDate,
+        endDate
+      ) => {
+        const actions = getActions();
+        const store = getStore();
+        try {
+          let response = await fetch(
+            `${process.env.BACKEND_URL}/api/projects/${id}`,
+            {
+              method: "PUT",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                project_name: `${title}`,
+                account_manager_id: `${managerId}`,
+                assistant_id: `${assistantId}`,
+                customer_id: `${customerId}`,
+                description: `${description}`,
+                start_date: `${startDate}`,
+                end_date: `${endDate}`,
+              }),
+            }
+          );
+          if (response.ok) {
+            return id;
+          }
+        } catch (error) {}
       },
     },
   };
