@@ -124,11 +124,23 @@ def edit_project(project_id = None):
         project = Project.query.get(project_id)
         if project is not None:
             data = request.json
-            project = Project(id=project_id, project_name=data["project_name"], account_manager_id=data["account_manager_id"], assistant_id=data["assistant_id"], customer_id=data["customer_id"], description=data["description"], start_date=data["start_date"], end_date=data["end_date"])
-            print(project.serialize())
+            name = data["project_name"]
+            manager = data["account_manager_id"]
+            assistant = data["assistant_id"]
+            customer = data["customer_id"]
+            description = data["description"]
+            start = data["start_date"]
+            end = data["end_date"]
+            project.project_name = name
+            project.account_manager_id = manager
+            project.assistant_id = assistant
+            project.customer_id = customer
+            project.description = description
+            project.start_date = start
+            project.end_date = end
             try:
                 db.session.commit()
-                return jsonify(project_id), 200
+                return jsonify({"message":"project updated successfully"}), 200
             except Exception as error:
                 print(error)
                 db.session.rollback()
