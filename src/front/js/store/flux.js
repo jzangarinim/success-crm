@@ -1,4 +1,3 @@
-
 const getState = ({ getStore, getActions, setStore }) => {
   return {
     store: {
@@ -7,27 +6,27 @@ const getState = ({ getStore, getActions, setStore }) => {
         last_name: "zangarini",
         role: "admin",
       },
-      BACKEND_URL: 'http://localhost:3001',
-			users: [],
-			id: ""
+      BACKEND_URL: "http://localhost:3001",
+      users: [],
+      id: "",
     },
     actions: {
       // Use getActions to call a function within a fuction
-      Register : async (user) => {
+      Register: async (user) => {
         const store = getStore();
         const actions = getActions();
         try {
           let response = await fetch(`${process.env.BACKEND_URL}/api/users`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(user),
-        });
-        if (response.ok) {
-          console.log(user)
-          return true
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(user),
+          });
+          if (response.ok) {
+            console.log(user);
+            return true;
           }
         } catch (err) {
-        console.log(err);
+          console.log(err);
         }
       },
 
@@ -61,9 +60,42 @@ const getState = ({ getStore, getActions, setStore }) => {
         //reset the global store
         setStore({ demo: demo });
       },
+      editProject: async (
+        id,
+        title,
+        managerId,
+        assistantId,
+        customerId,
+        description,
+        startDate,
+        endDate
+      ) => {
+        const actions = getActions();
+        const store = getStore();
+        try {
+          let response = await fetch(
+            `${process.env.BACKEND_URL}/api/projects/${id}`,
+            {
+              method: "PUT",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                project_name: `${title}`,
+                account_manager_id: `${managerId}`,
+                assistant_id: `${assistantId}`,
+                customer_id: `${customerId}`,
+                description: `${description}`,
+                start_date: `${startDate}`,
+                end_date: `${endDate}`,
+              }),
+            }
+          );
+          if (response.ok) {
+            console.log(response);
+          }
+        } catch (error) {}
+      },
     },
   };
 };
 
 export default getState;
-

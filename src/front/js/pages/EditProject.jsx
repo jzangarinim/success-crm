@@ -8,8 +8,9 @@ import { EmployeeList } from "../component/EmployeeList.jsx";
 
 export const EditProject = () => {
   let navigate = useNavigate();
-  const { store } = useContext(Context);
+  const { store, actions } = useContext(Context);
   const { user } = store;
+  const { editProject } = actions;
   const [project, setProject] = useState({});
   let { project_id } = useParams();
 
@@ -22,7 +23,16 @@ export const EditProject = () => {
     let title = document.getElementById("projectTitleInput").value;
     let manager = document.getElementById("selectHead").value;
     let assistant = document.getElementById("selectVirtual").value;
-    console.log(title, manager, assistant);
+    editProject(
+      project_id,
+      title,
+      manager,
+      assistant,
+      project.customer_id,
+      project.description,
+      project.start_date,
+      project.end_date
+    );
   }
   useEffect(() => {
     let aux = test_projects.find((item) => item.id === parseInt(project_id));
