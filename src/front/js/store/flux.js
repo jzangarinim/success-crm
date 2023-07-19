@@ -90,7 +90,7 @@ const getState = ({ getStore, getActions, setStore }) => {
             }
           );
           if (response.ok) {
-            console.log(response);
+            return id;
           }
         } catch (error) {}
       },

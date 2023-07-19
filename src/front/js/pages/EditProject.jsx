@@ -23,12 +23,13 @@ export const EditProject = () => {
     let title = document.getElementById("projectTitleInput").value;
     let manager = document.getElementById("selectHead").value;
     let assistant = document.getElementById("selectVirtual").value;
-    editProject(
+    let customer = 166;
+    let id = await editProject(
       project_id,
       title,
       manager,
       assistant,
-      project.customer_id,
+      customer,
       project.description,
       project.start_date,
       project.end_date
@@ -54,6 +55,7 @@ export const EditProject = () => {
                   <div className="mb-3">
                     <input
                       type="text"
+                      required
                       className="form-control"
                       id="projectTitleInput"
                       defaultValue={project?.project_name}
