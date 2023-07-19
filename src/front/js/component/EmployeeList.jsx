@@ -55,7 +55,11 @@ export const EmployeeList = (props) => {
   }, []);
   return (
     <>
-      <select className="form-select mt-1" aria-label="Default select example">
+      <select
+        className="form-select mt-1"
+        aria-label="Default select example"
+        id={`select${props.role}`}
+      >
         {employees.map((employee, index) => {
           return (
             <option key={employee?.id} value={employee?.id}>
