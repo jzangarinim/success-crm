@@ -1,6 +1,11 @@
+import os
+import sys
+
 from flask_sqlalchemy import SQLAlchemy
+# from sqlalchemy import Column, ForeignKey, Integer, String
 from datetime import datetime
 from enum import Enum
+from sqlalchemy.orm import relationship, declarative_base
 
 db = SQLAlchemy()
 
@@ -8,6 +13,7 @@ db = SQLAlchemy()
 class Roles(str, Enum):
     admin = 'Admin'
     head_of_department = 'Head of Department'
+    account_manager = 'Account Manager'
     virtual_assistant = 'Virtual Assistant'
     member = 'Department member'
 
@@ -53,37 +59,24 @@ class User(db.Model):
         }
 
 
-class Virtualassistant(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-    hourly_rate = db.Column(db.Numeric(precision=4, scale=2), nullable=False)
-    weekly_availability = db.Column(db.Integer, nullable=False)
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
-
-    def __repr__(self):
-        return f'<Virtual Assistant {self.name}>'
-
-    def serialize(self):
-        return {
-            "id": self.id,
-            "name": self.name,
-            "last_name": self.last_name,
-            "hourly_rate": self.hourly_rate,
-            "weekly_availability": self.weekly_availability
-        }
-
-
 class Project(db.Model):
     project_id = db.Column(db.Integer, primary_key=True)
     project_name = db.Column(db.String(100), unique=False, nullable=False)
+    description = db.Column(db.Text, nullable=True)
+    start_date = db.Column(db.DateTime, default=datetime.utcnow)
+    end_date = db.Column(db.DateTime, nullable=True)
+
     account_manager_id = db.Column(
         db.Integer, db.ForeignKey('user.id'), nullable=False)
+    account_manager = db.relationship("User", backref="user")
+
     assistant_id = db.Column(
         db.Integer, db.ForeignKey('user.id'), nullable=False)
+    assistant = db.relationship("User", backref="user")
+
     customer_id = db.Column(db.Integer, db.ForeignKey(
         'customer.id'), nullable=False)
-    description = db.Column(db.Text, nullable=True)
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    customer = db.relationship("Customer", backref="project")
 
     def __repr__(self):
         return f'<Project {self.project_name}>'
@@ -96,18 +89,22 @@ class Project(db.Model):
             "assistant_id": self.assistant_id,
             "customer_id": self.customer_id,
             "description": self.description,
-            "created_at": self.created_at
+            "start_date": self.start_date,
+            "end_date": self.end_date,
+            "company_name": self.customer.company_name,
+            "assistant_name": self.user.user_name,
+            "account_manager_name": self.user.user_name
         }
 
 
 class Customer(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     company_logo_url = db.Column(db.String(256), nullable=True)
-    company_name = db.Column(db.String(30), nullable=False)
+    company_name = db.Column(db.String(60), nullable=False)
     company_address = db.Column(db.String(80), nullable=False)
-    country = db.Column(db.String(20), nullable=False)
-    representative_name = db.Column(db.String(20), nullable=False)
-    representative_contact = db.Column(db.String(30), nullable=False)
+    country = db.Column(db.String(40), nullable=False)
+    representative_name = db.Column(db.String(40), nullable=False)
+    representative_contact = db.Column(db.String(60), nullable=False)
 
     def __repr__(self):
         return f'<Customer {self.representative_name}>'

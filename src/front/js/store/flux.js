@@ -18,11 +18,18 @@ const getState = ({ getStore, getActions, setStore }) => {
     },
     actions: {
 
+      // ShowProject : async(project, users) =>{
+      //   const store = getStore();
+      //   const actions = getActions();
+
+
+      // },
+
       Project : async(project) =>{
         const store = getStore();
         const actions = getActions();
         try {
-          let response = await fetch(`${process.env.BACKEND_URL}/api/regproject`, {
+          let response = await fetch(`${process.env.BACKEND_URL}/api/projects`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(project),
