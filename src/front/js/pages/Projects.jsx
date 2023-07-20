@@ -2,11 +2,10 @@ import React, { useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import { Context } from "../store/appContext";
-import test_projects from "C://4GeeksAcademy/MOCK_DATA.json";
 
 export const Projects = () => {
   let navigate = useNavigate();
-  const [data, setData] = useState(test_projects);
+  const [data, setData] = useState([]);
   const { store } = useContext(Context);
   const { user } = store;
 
@@ -30,6 +29,23 @@ export const Projects = () => {
       }
     }
   }
+
+  useEffect(() => {
+    const getProjects = async () => {
+      try {
+        let response = await fetch(`${process.env.BACKEND_URL}/api/projects`);
+        let data = await response.json();
+        // Sorts employees by department role (Head > Member)
+        const aux = [...data].sort((a, b) =>
+          a.project_id > b.project_id ? 1 : -1
+        );
+        setData(aux);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    getProjects();
+  }, []);
 
   return (
     <>
