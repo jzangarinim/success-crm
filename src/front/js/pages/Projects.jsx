@@ -88,7 +88,7 @@ export const Projects = () => {
                 return (
                   <tr key={index}>
                     <th scope="row" className="text-center">
-                      {project.id}
+                      {project.project_id}
                     </th>
                     <td>{project.project_name}</td>
                     <td>{project.account_manager_name}</td>
