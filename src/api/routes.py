@@ -158,8 +158,16 @@ def get_one_project(project_id=None):
     if project_id is not None:
         project = Project()
         project = project.query.get(project_id)
+
+        customer = Customer()
+        customer = customer.query.get(id)
+
+        user = User()
+        user = user.query.get(id)
+
         if project is not None:
-            return jsonify(project.serialize()), 200
+            return jsonify(project.serialize(), customer.company_name.serialize(),
+                           user.name.serialize(), user.last_name.serialize()), 200
         else:
             return jsonify({"message": "project not found"}), 404
     else:
