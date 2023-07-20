@@ -159,19 +159,41 @@ def get_one_project(project_id=None):
         project = Project()
         project = project.query.get(project_id)
 
-        customer = Customer()
-        customer = customer.query.get(id)
-
-        user = User()
-        user = user.query.get(id)
-
         if project is not None:
-            return jsonify(project.serialize(), customer.company_name.serialize(),
-                           user.name.serialize(), user.last_name.serialize()), 200
+            return jsonify(project.serialize()), 200
+
         else:
             return jsonify({"message": "project not found"}), 404
     else:
         return jsonify({"message": "bad request"}), 400
+
+
+def get_customer(id=None):
+    if id is not None:
+        customer = Customer()
+        customer = customer.query.get(id)
+
+        if customer is not None:
+            return jsonify(customer.company_name.serialize()), 200
+
+        else:
+            return jsonify({"message": "Customer not found"}), 404
+
+
+def get_assistant(id=None):
+    if id is not None:
+        assistant = User()
+        assistant = assistant.query.get(id)
+
+        if assistant is not None:
+            return jsonify(assistant.name.serialize(), assistant.last_name.serialize()), 200
+
+        else:
+            return jsonify({"message": "Customer not found"}), 404
+        # user = User()
+        # user = user.query.get(name, last_name)
+        # , customer.company_name.serialize(),
+        #                    user.name.serialize(), user.last_name.serialize()
 
 
 @api.route('/projects/<int:project_id>', methods=['PUT'])
