@@ -22,7 +22,7 @@ class Departments(str, Enum):
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(120), unique=True, nullable=False)
-    password = db.Column(db.String(20), unique=False, nullable=False)
+    password = db.Column(db.String(256), unique=False, nullable=False)
     department = db.Column(db.Enum(Departments), nullable=False)
     role = db.Column(db.Enum(Roles), nullable=False, default=Roles.member)
     name = db.Column(db.String(20), unique=False, nullable=False)
