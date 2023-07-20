@@ -65,7 +65,7 @@ class Project(db.Model):
     
     def serialize(self):
         return {
-            "id": self.id,
+            "project_id": self.project_id,
             "project_name": self.project_name,
             "account_manager_id": self.account_manager_id,
             "assistant_id": self.assistant_id,
@@ -89,7 +89,7 @@ class Customer(db.Model):
 
     def serialize(self):
         return {
-            "project_id": self.project_id,
+            "id": self.id,
             "company_name": self.company_name,
             "company_address": self.company_address,
             "country": self.country,
