@@ -2,13 +2,14 @@ import React, { useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import { Context } from "../store/appContext";
+import "../../styles/projects.css";
 
 export const Projects = () => {
   let navigate = useNavigate();
   const [data, setData] = useState([]);
   const { store } = useContext(Context);
   const { user } = store;
-  console.log(data);
+
   function handleEdit(event) {
     if (
       event.target.id.includes("edit") ||
@@ -18,6 +19,9 @@ export const Projects = () => {
         navigate("/projects/edit");
       }
     }
+  }
+  function handleProjectClick() {
+    console.log("epale");
   }
   function handleDelete(event) {
     if (
@@ -90,10 +94,12 @@ export const Projects = () => {
                     <th scope="row" className="text-center">
                       {project.project_id}
                     </th>
-                    <td>{project.project_name}</td>
-                    <td>{project.account_manager_name}</td>
-                    <td>{project.assistant_name}</td>
-                    <td>{project.customer_name}</td>
+                    <td className="project-name" onClick={handleProjectClick}>
+                      {project.project_name}
+                    </td>
+                    <td>{project.account_manager_id}</td>
+                    <td>{project.assistant_id}</td>
+                    <td>{project.customer_id}</td>
                     <td
                       className={`d-flex justify-content-center ${
                         user.role != "admin" ? "d-none" : ""

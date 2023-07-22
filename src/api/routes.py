@@ -109,8 +109,10 @@ def get_projects():
     for project in aux_projects:
         manager = User.query.filter_by(id=project["account_manager_id"]).first()
         assistant = User.query.filter_by(id=project["assistant_id"]).first()
+        customer = User.query.filter_by(id=project["customer_id"]).first()
         project["account_manager_id"] = f"{manager.name} {manager.last_name}"
         project["assistant_id"] = f"{assistant.name} {assistant.last_name}"
+        project["customer_id"] = f"{customer.name} {customer.last_name}"
     return jsonify(aux_projects), 200
 
 @api.route('/projects/<int:project_id>', methods=['GET'])
