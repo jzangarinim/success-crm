@@ -103,8 +103,15 @@ def get_one_customer(customer_id=None):
 def get_projects():
     projects = Project()
     projects = projects.query.all()
-    projects = list(map(lambda item: item.serialize(), projects))
-    return jsonify(projects)
+    aux_projects = []
+    for project in projects:
+        aux_projects.append(project.serialize())
+    for project in aux_projects:
+        manager = User.query.filter_by(id=project["account_manager_id"]).first()
+        assistant = User.query.filter_by(id=project["assistant_id"]).first()
+        project["account_manager_id"] = f"{manager.name} {manager.last_name}"
+        project["assistant_id"] = f"{assistant.name} {assistant.last_name}"
+    return jsonify(aux_projects), 200
 
 @api.route('/projects/<int:project_id>', methods=['GET'])
 def get_one_project(project_id=None):

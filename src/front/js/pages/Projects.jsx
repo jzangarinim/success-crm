@@ -8,7 +8,7 @@ export const Projects = () => {
   const [data, setData] = useState([]);
   const { store } = useContext(Context);
   const { user } = store;
-
+  console.log(data);
   function handleEdit(event) {
     if (
       event.target.id.includes("edit") ||
