@@ -15,20 +15,20 @@ export const Projects = () => {
       event.target.id.includes("edit") ||
       event.target.parentNode.id.includes("edit")
     ) {
-      if (user.role === "admin") {
+      if (user.role === "Admin" || user.role === "Head of Department") {
         navigate("/projects/edit");
       }
     }
   }
-  function handleProjectClick() {
-    console.log("epale");
+  function handleProjectClick(id) {
+    navigate(`/projects/${id}`);
   }
   function handleDelete(event) {
     if (
       event.target.id.includes("delete") ||
       event.target.parentNode.id.includes("delete")
     ) {
-      if (user.role === "admin") {
+      if (user.role === "Admin") {
         console.log("You have permission to delete");
       }
     }
@@ -60,7 +60,7 @@ export const Projects = () => {
             <button
               type="button"
               className={`btn btn-success ${
-                user.role != "admin" ? "d-none" : ""
+                user.role != "Admin" ? "d-none" : ""
               }`}
             >
               Add a project
@@ -83,7 +83,7 @@ export const Projects = () => {
                 <th
                   scope="col"
                   style={{ width: 80 + "px" }}
-                  className={`${user.role != "admin" ? "d-none" : ""}`}
+                  className={`${user.role != "Admin" ? "d-none" : ""}`}
                 ></th>
               </tr>
             </thead>
@@ -94,7 +94,10 @@ export const Projects = () => {
                     <th scope="row" className="text-center">
                       {project.project_id}
                     </th>
-                    <td className="project-name" onClick={handleProjectClick}>
+                    <td
+                      className="project-name"
+                      onClick={() => handleProjectClick(project.project_id)}
+                    >
                       {project.project_name}
                     </td>
                     <td>{project.account_manager_id}</td>
@@ -102,11 +105,11 @@ export const Projects = () => {
                     <td>{project.customer_id}</td>
                     <td
                       className={`d-flex justify-content-center ${
-                        user.role != "admin" ? "d-none" : ""
+                        user.role != "Admin" ? "d-none" : ""
                       }`}
                     >
                       <Link
-                        to={`/projects/edit/${project.id}`}
+                        to={`/projects/edit/${project.project_id}`}
                         type="button"
                         className="btn btn-secondary me-1"
                         id={`edit-button${index}`}
