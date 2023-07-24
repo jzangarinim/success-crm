@@ -3,12 +3,12 @@ import profilePicture from "../../img/Default_pfp.jpg";
 
 export const Employees = () => {
   const [employees, setEmployees] = useState([]);
-  const [original, setOriginal] = useState();
+  const [original, setOriginal] = useState([]);
 
   function handleFilter(event, str) {
     if (event.target.id === `${str}-button`) {
       if (!event.target.classList.contains("active")) {
-        const filter = employees.filter((emp) => {
+        const filter = original.filter((emp) => {
           return emp.department === (str !== "Human" ? str : "Human Resources");
         });
         setEmployees(filter);
@@ -24,8 +24,22 @@ export const Employees = () => {
       try {
         let response = await fetch(`${process.env.BACKEND_URL}/api/users`);
         let data = await response.json();
-        // Sorts employees by department role (Head > Member)
-        const aux = [...data].sort((a, b) => (a.role > b.role ? -1 : 1));
+        // Sorts employees by department role (Admin > Head > Manager > VA > Member)
+        let aux = data.sort(function (a, b) {
+          const roleA = a.role;
+          const roleB = b.role;
+          const sortedRoles = [
+            "Admin",
+            "Head of Department",
+            "Account Manager",
+            "Virtual Assistant",
+            "Department member",
+          ];
+          const indexA = sortedRoles.indexOf(roleA);
+          const indexB = sortedRoles.indexOf(roleB);
+          return indexA - indexB;
+        });
+        //const aux = [...data].sort((a, b) => (a.role > b.role ? -1 : 1));
         setEmployees(aux);
         setOriginal(aux);
       } catch (error) {
