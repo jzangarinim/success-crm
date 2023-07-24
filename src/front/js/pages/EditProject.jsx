@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useContext } from "react";
 import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useParams } from "react-router-dom";
 import { Context } from "../store/appContext";
 import { EmployeeList } from "../component/EmployeeList.jsx";
@@ -13,6 +14,8 @@ export const EditProject = () => {
   const location = useLocation();
   const { data } = location.state;
   let { project_id } = useParams();
+  let navigate = useNavigate();
+
   function formatDate(date) {
     let aux = new Date(date);
     let result = aux.toLocaleDateString("en-GB");
@@ -38,6 +41,13 @@ export const EditProject = () => {
     }
   }
   useEffect(() => {
+    if (
+      user.role != "Admin" &&
+      user.role != "Head of Department" &&
+      user.role != "Account Manager"
+    ) {
+      navigate("/projects");
+    }
     async function getProject() {
       try {
         let response = await fetch(
@@ -48,6 +58,7 @@ export const EditProject = () => {
       } catch (error) {}
     }
     getProject();
+    return () => {};
   }, []);
 
   return (
