@@ -2,34 +2,44 @@ import React, { useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import { Context } from "../store/appContext";
-import test_projects from "C://4GeeksAcademy/MOCK_DATA.json";
+import "../../styles/projects.css";
 
 export const Projects = () => {
   let navigate = useNavigate();
-  const [data, setData] = useState(test_projects);
+  const [data, setData] = useState([]);
   const { store } = useContext(Context);
   const { user } = store;
 
-  function handleEdit(event) {
-    if (
-      event.target.id.includes("edit") ||
-      event.target.parentNode.id.includes("edit")
-    ) {
-      if (user.role === "admin") {
-        navigate("/projects/edit");
-      }
-    }
+  function handleProjectClick(id) {
+    navigate(`/projects/${id}`);
   }
   function handleDelete(event) {
     if (
       event.target.id.includes("delete") ||
       event.target.parentNode.id.includes("delete")
     ) {
-      if (user.role === "admin") {
+      if (user.role === "Admin") {
         console.log("You have permission to delete");
       }
     }
   }
+
+  useEffect(() => {
+    const getProjects = async () => {
+      try {
+        let response = await fetch(`${process.env.BACKEND_URL}/api/projects`);
+        let data = await response.json();
+        // Sorts projects by id
+        const aux = [...data].sort((a, b) =>
+          a.project_id > b.project_id ? 1 : -1
+        );
+        setData(aux);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    getProjects();
+  }, []);
 
   return (
     <>
@@ -37,14 +47,15 @@ export const Projects = () => {
         <div className="row mt-3 d-flex justify-content-center">
           <div className="p-0 d-flex justify-content-between align-items-center">
             <h1 className="text-success">Projects</h1>
-            <button
+            <Link
+              to="/projects/create"
               type="button"
               className={`btn btn-success ${
-                user.role != "admin" ? "d-none" : ""
+                user.role != "Admin" ? "d-none" : ""
               }`}
             >
               Add a project
-            </button>
+            </Link>
           </div>
           <table className="table table-sm table-striped table-success table-hover table-bordered align-middle">
             <thead>
@@ -63,7 +74,7 @@ export const Projects = () => {
                 <th
                   scope="col"
                   style={{ width: 80 + "px" }}
-                  className={`${user.role != "admin" ? "d-none" : ""}`}
+                  className={`${user.role != "Admin" ? "d-none" : ""}`}
                 ></th>
               </tr>
             </thead>
@@ -72,23 +83,28 @@ export const Projects = () => {
                 return (
                   <tr key={index}>
                     <th scope="row" className="text-center">
-                      {project.id}
+                      {project.project_id}
                     </th>
-                    <td>{project.project_name}</td>
-                    <td>{project.account_manager_name}</td>
-                    <td>{project.assistant_name}</td>
-                    <td>{project.customer_name}</td>
+                    <td
+                      className="project-name"
+                      onClick={() => handleProjectClick(project.project_id)}
+                    >
+                      {project.project_name}
+                    </td>
+                    <td>{project.account_manager_id}</td>
+                    <td>{project.assistant_id}</td>
+                    <td>{project.customer_id}</td>
                     <td
                       className={`d-flex justify-content-center ${
-                        user.role != "admin" ? "d-none" : ""
+                        user.role != "Admin" ? "d-none" : ""
                       }`}
                     >
                       <Link
-                        to={`/projects/edit/${project.id}`}
+                        to={`/projects/edit/${project.project_id}`}
+                        state={{ data: project }}
                         type="button"
                         className="btn btn-secondary me-1"
                         id={`edit-button${index}`}
-                        onClick={handleEdit}
                       >
                         <i className="fa-regular fa-pen-to-square"></i>
                       </Link>

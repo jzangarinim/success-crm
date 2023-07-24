@@ -103,8 +103,17 @@ def get_one_customer(customer_id=None):
 def get_projects():
     projects = Project()
     projects = projects.query.all()
-    projects = list(map(lambda item: item.serialize(), projects))
-    return jsonify(projects)
+    aux_projects = []
+    for project in projects:
+        aux_projects.append(project.serialize())
+    for project in aux_projects:
+        manager = User.query.filter_by(id=project["account_manager_id"]).first()
+        assistant = User.query.filter_by(id=project["assistant_id"]).first()
+        customer = User.query.filter_by(id=project["customer_id"]).first()
+        project["account_manager_id"] = f"{manager.name} {manager.last_name}"
+        project["assistant_id"] = f"{assistant.name} {assistant.last_name}"
+        project["customer_id"] = f"{customer.name} {customer.last_name}"
+    return jsonify(aux_projects), 200
 
 @api.route('/projects/<int:project_id>', methods=['GET'])
 def get_one_project(project_id=None):
@@ -119,21 +128,24 @@ def get_one_project(project_id=None):
         return jsonify({"message":"bad request"}), 400
 
 @api.route('/projects/<int:project_id>', methods=['PUT'])
-def edit_project():
+def edit_project(project_id=None):
     data = request.json
-    project = Project.query.filter_by(
-        project_id=data.get("project_id")).first()
+    project = Project.query.get(project_id)
 
     if data.get("project_name") is not None:
         project.project_name = data["project_name"]
     if data.get("account_manager_id") is not None:
         project.account_manager_id = data["account_manager_id"]
     if data.get("assistant_id") is not None:
-        project.project_name = data["assistant_id"]
+        project.assistant_id = data["assistant_id"]
     if data.get("customer_id") is not None:
-        project.project_name = data["customer_id"]
+        project.customer_id = data["customer_id"]
     if data.get("description") is not None:
-        project.project_name = data["description"]
+        project.description = data["description"]
+    if data.get("start_date") is not None:
+        project.start_date = data["start_date"]
+    if data.get("end_date") is not None:
+        project.end_date = data["end_date"]
 
         try:
             db.session.commit()

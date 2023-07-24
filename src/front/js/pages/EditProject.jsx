@@ -1,18 +1,20 @@
 import React, { useState, useEffect, useContext } from "react";
 import { Link } from "react-router-dom";
-import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { Context } from "../store/appContext";
-import test_projects from "C://4GeeksAcademy/MOCK_DATA.json";
 import { EmployeeList } from "../component/EmployeeList.jsx";
+import { useLocation } from "react-router-dom";
 
 export const EditProject = () => {
-  let navigate = useNavigate();
   const { store, actions } = useContext(Context);
   const { user } = store;
   const { editProject } = actions;
   const [project, setProject] = useState({});
+  const location = useLocation();
+  const { data } = location.state;
   let { project_id } = useParams();
+  let navigate = useNavigate();
 
   function formatDate(date) {
     let aux = new Date(date);
@@ -23,22 +25,42 @@ export const EditProject = () => {
     let title = document.getElementById("projectTitleInput").value;
     let manager = document.getElementById("selectHead").value;
     let assistant = document.getElementById("selectVirtual").value;
-    let customer = 166;
-    let id = await editProject(
+    let description = document.getElementById("projectDescriptionInput").value;
+    let response = await editProject(
       project_id,
       title,
       manager,
       assistant,
-      customer,
-      project.description,
+      project.customer_id,
+      description,
       project.start_date,
       project.end_date
     );
+    if (response === true) {
+      console.log("Project edited successfully!");
+    }
   }
   useEffect(() => {
-    let aux = test_projects.find((item) => item.id === parseInt(project_id));
-    setProject(aux);
+    if (
+      user.role != "Admin" &&
+      user.role != "Head of Department" &&
+      user.role != "Account Manager"
+    ) {
+      navigate("/projects");
+    }
+    async function getProject() {
+      try {
+        let response = await fetch(
+          `${process.env.BACKEND_URL}/api/projects/${project_id}`
+        );
+        let data = await response.json();
+        setProject(data);
+      } catch (error) {}
+    }
+    getProject();
+    return () => {};
   }, []);
+
   return (
     <>
       <div className="container-fluid col-9 mt-3">
@@ -68,15 +90,15 @@ export const EditProject = () => {
                   <div className="d-flex justify-content-center mt-3 ms-3">
                     <div className="col-3 border-end">
                       <div className="text-body-secondary mb-3 me-3">
-                        ► Manager: {project?.account_manager_name}
+                        ► Manager: {data?.account_manager_id}
                         <EmployeeList role="Head" />
                       </div>
                       <div className="text-body-secondary mb-3 me-3">
-                        ► Assistant: {project?.assistant_name}
+                        ► Assistant: {data?.assistant_id}
                         <EmployeeList role="Virtual" />
                       </div>
                       <div className="text-body-secondary mb-3 me-3">
-                        ► Customer: {project?.customer_name}
+                        ► Customer: {data?.customer_id}
                       </div>
                       <div className="text-body-secondary mb-3 me-3">
                         ► Start date: {formatDate(project?.start_date)}

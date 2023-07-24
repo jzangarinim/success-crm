@@ -4,39 +4,41 @@ const getState = ({ getStore, getActions, setStore }) => {
       user: {
         name: "jose",
         last_name: "zangarini",
-        role: "admin",
-       },
-			users: [],
-			id: "",
-      project: { 
-        project_name : "",
+        role: "Admin",
+      },
+      users: [],
+      id: "",
+      project: {
+        project_name: "",
         account_manager_id: "",
         assistant_id: "",
         customer_id: "",
-        description:""
-    },
+        description: "",
+      },
     },
     actions: {
-      Project : async(project) =>{
+      Project: async (project) => {
         const store = getStore();
         const actions = getActions();
         try {
-          let response = await fetch(`${process.env.BACKEND_URL}/api/regproject`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(project),
-        });
-        if (response.ok) {
-          console.log(project)
-          return true
+          let response = await fetch(
+            `${process.env.BACKEND_URL}/api/regproject`,
+            {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify(project),
+            }
+          );
+          if (response.ok) {
+            console.log(project);
+            return true;
           }
-        } 
-        catch (err) {
-        console.log(err);
+        } catch (err) {
+          console.log(err);
         }
       },
 
-      Register : async (user) => {
+      Register: async (user) => {
         const store = getStore();
         const actions = getActions();
         try {
@@ -49,9 +51,8 @@ const getState = ({ getStore, getActions, setStore }) => {
             console.log(user);
             return true;
           }
-        } 
-        catch (err) {
-        console.log(err);
+        } catch (err) {
+          console.log(err);
         }
       },
 
@@ -95,8 +96,6 @@ const getState = ({ getStore, getActions, setStore }) => {
         startDate,
         endDate
       ) => {
-        const actions = getActions();
-        const store = getStore();
         try {
           let response = await fetch(
             `${process.env.BACKEND_URL}/api/projects/${id}`,
@@ -115,7 +114,7 @@ const getState = ({ getStore, getActions, setStore }) => {
             }
           );
           if (response.ok) {
-            return id;
+            return true;
           }
         } catch (error) {}
       },
