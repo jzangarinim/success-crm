@@ -10,16 +10,6 @@ export const Projects = () => {
   const { store } = useContext(Context);
   const { user } = store;
 
-  function handleEdit(event) {
-    if (
-      event.target.id.includes("edit") ||
-      event.target.parentNode.id.includes("edit")
-    ) {
-      if (user.role === "Admin" || user.role === "Head of Department") {
-        navigate("/projects/edit");
-      }
-    }
-  }
   function handleProjectClick(id) {
     navigate(`/projects/${id}`);
   }
@@ -39,7 +29,7 @@ export const Projects = () => {
       try {
         let response = await fetch(`${process.env.BACKEND_URL}/api/projects`);
         let data = await response.json();
-        // Sorts employees by department role (Head > Member)
+        // Sorts projects by id
         const aux = [...data].sort((a, b) =>
           a.project_id > b.project_id ? 1 : -1
         );
@@ -57,14 +47,15 @@ export const Projects = () => {
         <div className="row mt-3 d-flex justify-content-center">
           <div className="p-0 d-flex justify-content-between align-items-center">
             <h1 className="text-success">Projects</h1>
-            <button
+            <Link
+              to="/projects/create"
               type="button"
               className={`btn btn-success ${
                 user.role != "Admin" ? "d-none" : ""
               }`}
             >
               Add a project
-            </button>
+            </Link>
           </div>
           <table className="table table-sm table-striped table-success table-hover table-bordered align-middle">
             <thead>
@@ -110,10 +101,10 @@ export const Projects = () => {
                     >
                       <Link
                         to={`/projects/edit/${project.project_id}`}
+                        state={{ data: project }}
                         type="button"
                         className="btn btn-secondary me-1"
                         id={`edit-button${index}`}
-                        onClick={handleEdit}
                       >
                         <i className="fa-regular fa-pen-to-square"></i>
                       </Link>

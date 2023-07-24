@@ -96,8 +96,6 @@ const getState = ({ getStore, getActions, setStore }) => {
         startDate,
         endDate
       ) => {
-        const actions = getActions();
-        const store = getStore();
         try {
           let response = await fetch(
             `${process.env.BACKEND_URL}/api/projects/${id}`,
@@ -116,7 +114,7 @@ const getState = ({ getStore, getActions, setStore }) => {
             }
           );
           if (response.ok) {
-            return id;
+            return true;
           }
         } catch (error) {}
       },
