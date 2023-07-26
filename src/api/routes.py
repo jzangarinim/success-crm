@@ -27,6 +27,16 @@ def get_one_user(user_id = None):
     else:
         return jsonify({"message":"bad request"}), 400
 
+@api.route('/users/<int:user_id>/projects', methods=['GET'])
+def get_user_projects(user_id = None):
+    projects = Project.query.filter_by(account_manager_id = user_id).all()
+    if len(projects) == 0:
+        projects = Project.query.filter_by(assistant_id = user_id).all()
+        if len(projects) == 0:
+            return jsonify({"message":"no projects found"}), 404
+    projects = list(map(lambda item: item.serialize(), projects))
+    return jsonify(projects), 200
+
 @api.route('/users/<department>', methods=['GET'])
 def get_department(department = None):
     if department == "hr" or department == "sales" or department == "finances" or department == "trial" or department == "recruitment":
