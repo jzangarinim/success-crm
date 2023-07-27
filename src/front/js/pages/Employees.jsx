@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import profilePicture from "../../img/Default_pfp.jpg";
 
 export const Employees = () => {
@@ -54,9 +55,7 @@ export const Employees = () => {
       <div className="container">
         <div className="row">
           <div className="col-12 d-flex flex-wrap justify-content-center">
-            <div
-              className={`col-8 mt-3 d-flex justify-content-center align-items-center`}
-            >
+            <div className="col-8 mt-3 d-flex justify-content-center align-items-center">
               <h1>Departments:</h1>
               <button
                 type="button"
@@ -106,7 +105,7 @@ export const Employees = () => {
             </div>
             {employees.map((employee, index) => {
               return (
-                <div className="card col-5 mt-3 me-3" key={index}>
+                <div className="card col-5 mt-3 me-3" key={employee.id}>
                   <div className="row g-0 d-flex">
                     <div className="col-3 mt-3 ms-3 mb-3">
                       <img
@@ -116,22 +115,31 @@ export const Employees = () => {
                       />
                     </div>
                     <div className="col-7 w-auto">
-                      <div className="card-body">
+                      <div className="card-body p-3">
                         <h5 className="card-title">{`${employee?.name} ${employee?.last_name}`}</h5>
                         <h6 className="card-subtitle mb-2 text-body-secondary">
                           {`${employee?.department} - ${employee?.role}`}
                         </h6>
                         <p className="card-text">{`email: ${employee?.email}`}</p>
-                        <a
-                          href="#"
+                        <Link
+                          to="#"
                           className="card-link"
                           onClick={() =>
                             (window.location = `mailto:${employee?.email}`)
                           }
                         >
                           Schedule a meeting with {employee?.name}
-                        </a>
+                        </Link>
                       </div>
+                    </div>
+                    <div className="card-body col-1 d-flex justify-content-end align-items-center">
+                      <Link
+                        to={`/employees/${employee.id}`}
+                        type="button"
+                        className="btn btn-success"
+                      >
+                        <i className="fa-solid fa-arrow-right"></i>
+                      </Link>
                     </div>
                   </div>
                 </div>
