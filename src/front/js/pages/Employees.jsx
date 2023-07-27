@@ -105,7 +105,11 @@ export const Employees = () => {
             </div>
             {employees.map((employee, index) => {
               return (
-                <div className="card col-5 mt-3 me-3" key={employee.id}>
+                <div
+                  className="card col-5 mt-3 me-3"
+                  id={employee.id}
+                  key={employee.id}
+                >
                   <div className="row g-0 d-flex">
                     <div className="col-3 mt-3 ms-3 mb-3">
                       <img
