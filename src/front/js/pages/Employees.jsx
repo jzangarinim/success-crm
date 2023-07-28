@@ -9,10 +9,10 @@ export const Employees = () => {
   function handleFilter(event, str) {
     if (event.target.id === `${str}-button`) {
       if (!event.target.classList.contains("active")) {
-        const filter = original.filter((emp) => {
+        const employeeFilter = original.filter((emp) => {
           return emp.department === (str !== "Human" ? str : "Human Resources");
         });
-        setEmployees(filter);
+        setEmployees(employeeFilter);
       } else if (event.target.classList.contains("active")) {
         setEmployees(original);
       }

@@ -1,13 +1,22 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
+import { useNavigate } from "react-router-dom";
 import { useParams } from "react-router-dom";
+import { Context } from "../store/appContext";
 import { Link } from "react-router-dom";
 import profilePicture from "../../img/Default_pfp.jpg";
 
 export const ViewEmployee = () => {
+  let navigate = useNavigate();
   const [employee, setEmployee] = useState({});
-  const [projects, setProjects] = useState({});
+  const [projects, setProjects] = useState([]);
+  const { store } = useContext(Context);
+  const { user } = store;
   let { id } = useParams();
-  console.log(employee, projects);
+
+  function handleProjectClick(id) {
+    navigate(`/projects/${id}`);
+  }
+
   useEffect(() => {
     async function getEmployee() {
       try {
@@ -32,10 +41,10 @@ export const ViewEmployee = () => {
   }, []);
   return (
     <>
-      <div className="container-fluid col-9 mt-3">
+      <div className="container-fluid col-7 mt-3">
         <div className="row col-1 mb-3">
           <Link
-            to={`/employees/#${id}`}
+            to={`/employees/`}
             type="button"
             className="btn btn-success p-0"
           >
@@ -45,33 +54,97 @@ export const ViewEmployee = () => {
         <div className="row">
           <div className="card mb-3 p-0 border border-warning">
             <div className="card-body">
-              <div className="mb-3 d-flex align-items-end border-bottom">
-                <h1 className="border-end pe-3 me-3">
+              <div className="mb-3 border-bottom">
+                <h1 className="pe-3 me-3">
                   {employee.name} {employee.last_name}
                 </h1>
-                <h1>
+                <h3>
                   {employee.department} - {employee.role}
-                </h1>
+                </h3>
               </div>
               <div className="d-flex justify-content-center">
-                <div className="col-3 border-end p-3">
+                <div className="col-4 border-end p-3">
                   <img
                     src={profilePicture}
                     className="img-fluid rounded-start"
                     alt="..."
                   />
                 </div>
-                <div className="col-9 card-text ms-3 me-3">
-                  <h5 className="card-title fs-4">Description</h5>
-                  <textarea
-                    type="text"
-                    className="form-control"
-                    id="projectDescriptionInput"
-                    defaultValue={"a"}
-                    placeholder="Project Description"
-                  ></textarea>
+                <div className="col-8 card-text ms-3 me-3">
+                  <div className="text-body-secondary mb-3 me-3">
+                    ► Name: {employee?.name}
+                  </div>
+                  <div className="text-body-secondary mb-3 me-3">
+                    ► Last name: {employee.last_name}
+                  </div>
+                  <div className="text-body-secondary mb-3 me-3">
+                    ► email: {employee?.email}
+                  </div>
+                  <div className="text-body-secondary mb-3 me-3">
+                    ► Location: {employee?.city}, {employee?.country}
+                  </div>
+                  <div className="text-body-secondary mb-3 me-3">
+                    ► Department: {employee?.department}
+                  </div>
+                  <div className="text-body-secondary mb-3 me-3">
+                    ► Role: {employee?.role}
+                  </div>
+                  <div className="text-body-secondary mb-3 me-3">
+                    ► Hourly rate:{" "}
+                    {employee?.role === "Virtual Assistant"
+                      ? employee?.hourly_rate
+                      : "N/A"}
+                  </div>
+                  <div className="text-body-secondary mb-3 me-3">
+                    ► Weekly availability:{" "}
+                    {employee?.role === "Virtual Assistant"
+                      ? employee?.weekly_availability
+                      : "N/A"}
+                  </div>
                 </div>
               </div>
+            </div>
+            <div className="card-footer">
+              <h3>Related projects</h3>
+              <table className="mt-1 table table-sm table-striped table-light table-hover table-bordered align-middle">
+                <thead>
+                  <tr>
+                    <th
+                      scope="col"
+                      className="text-center"
+                      style={{ width: 35 + "px" }}
+                    >
+                      #
+                    </th>
+                    <th scope="col">Project Name</th>
+                    <th scope="col">Project Manager</th>
+                    <th scope="col">Assigned VA</th>
+                    <th scope="col">Customer</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {projects.map((project, index) => {
+                    return (
+                      <tr key={project?.project_id}>
+                        <th scope="row" className="text-center">
+                          {project.project_id}
+                        </th>
+                        <td
+                          className="project-name"
+                          onClick={() =>
+                            handleProjectClick(project?.project_id)
+                          }
+                        >
+                          {project?.project_name}
+                        </td>
+                        <td>{project.account_manager_id}</td>
+                        <td>{project.assistant_id}</td>
+                        <td>{project.customer_id}</td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
             </div>
           </div>
         </div>
