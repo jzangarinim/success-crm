@@ -3,21 +3,19 @@ import { useHistory } from "react-router-dom";
 import "../../styles/login.css";
 import "./home";
 
-
-const LoginPage = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-
-  const handleLogin = (event) => {
-    event.preventDefault();
-
-    // Check if the email and password are correct 
-    if (email === "example@example.com" && password === "password") {
-      // Successful login, will redirect to a page once it is defined
-    } else {
-      alert("Invalid email or password");
-    }
+const Login = () => {
+  const { actions, store } = useContext(Context);
+  const [login, setLogin] = useState({
+    email: "",
+    password: "",
+  });
+  const handleChange = (event) => {
+    setLogin({ ...login, [event.target.email]: event.target.value });
   };
+
+  function handleLogin() {
+    actions.Login(login);
+  }
 
   return (
     <div className="login-container">
@@ -42,6 +40,6 @@ const LoginPage = () => {
   );
 };
 
-export default LoginPage;
+export default Login;
 
 
