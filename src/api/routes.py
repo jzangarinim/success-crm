@@ -2,6 +2,8 @@ from flask import Flask, request, jsonify, url_for, Blueprint
 from api.models import db, User, Customer, Project
 from api.utils import generate_sitemap, APIException
 from werkzeug.security import generate_password_hash, check_password_hash
+from base64 import b64encode
+import os
 
 api = Blueprint('api', __name__)
 
@@ -102,7 +104,30 @@ def add_user():
                 print(error)
                 return jsonify({"message": error.args}), 500
 
-    
+@api.route('/login', methods=['POST'])
+def handle_login():
+    if request.method == "POST":
+        body = request.json
+        email = body.get ("email", None)
+        password = body.get("password", None)
+
+        if email is None or password is None:
+            return jsonify("You need an Email and a Password"), 400
+        else:
+            user = User.query.filter_by(email=email).one_or_none()
+            if user is None:
+                return jsonify({"message":"Bad credential"}),400
+            else:
+                if check_password(user.password, password, user.salt):
+                    token = create_access_token(identity = user.id)
+                    return jsonify({"token":token}), 200
+                else:
+                    return jsonify({"message":"Bad Credential"}),400
+                
+
+
+
+
 # /customers endpoints
 
 
