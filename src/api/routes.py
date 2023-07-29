@@ -189,11 +189,7 @@ def get_assistant(id=None):
             return jsonify(assistant.name.serialize(), assistant.last_name.serialize()), 200
 
         else:
-            return jsonify({"message": "Customer not found"}), 404
-        # user = User()
-        # user = user.query.get(name, last_name)
-        # , customer.company_name.serialize(),
-        #                    user.name.serialize(), user.last_name.serialize()
+            return jsonify({"message": "Assistant not found"}), 404
 
 
 @api.route('/projects/<int:project_id>', methods=['PUT'])

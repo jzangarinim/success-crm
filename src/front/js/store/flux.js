@@ -18,13 +18,6 @@ const getState = ({ getStore, getActions, setStore }) => {
     },
     actions: {
 
-      // ShowProject : async(project, users) =>{
-      //   const store = getStore();
-      //   const actions = getActions();
-
-
-      // },
-
       Project : async(project) =>{
         const store = getStore();
         const actions = getActions();
