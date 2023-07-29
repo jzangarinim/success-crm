@@ -4,12 +4,14 @@ from api.utils import generate_sitemap, APIException
 from werkzeug.security import generate_password_hash, check_password_hash
 from base64 import b64encode
 import os
+from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
 
 api = Blueprint('api', __name__)
 
 # /users endpoints
 
 @api.route('/users', methods=['GET'])
+@jwt_required()
 def get_users():
     users = User()
     users = users.query.all()
