@@ -87,6 +87,7 @@ def add_user():
 
         if user is None:
             salt = b64encode(as.urandom(32)).decode('utf-8')
+            password = set_password (password, salt)
             user = User(email=data["email"], password=data["password"],
                         department=data["department"], name=data["name"],
                         last_name=data["last_name"], city=data["city"],
