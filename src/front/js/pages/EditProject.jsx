@@ -1,57 +1,134 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useParams } from "react-router-dom";
-import test_projects from "C://4GeeksAcademy/MOCK_DATA.json";
+import { Context } from "../store/appContext";
+import { EmployeeList } from "../component/EmployeeList.jsx";
+import { useLocation } from "react-router-dom";
 
 export const EditProject = () => {
+  const { store, actions } = useContext(Context);
+  const { user } = store;
+  const { editProject } = actions;
   const [project, setProject] = useState({});
+  const location = useLocation();
+  const { data } = location.state;
   let { project_id } = useParams();
+  let navigate = useNavigate();
+
   function formatDate(date) {
     let aux = new Date(date);
     let result = aux.toLocaleDateString("en-GB");
     return result;
   }
+  async function handleSubmit() {
+    let title = document.getElementById("projectTitleInput").value;
+    let manager = document.getElementById("selectHead").value;
+    let assistant = document.getElementById("selectVirtual").value;
+    let description = document.getElementById("projectDescriptionInput").value;
+    let response = await editProject(
+      project_id,
+      title,
+      manager,
+      assistant,
+      project.customer_id,
+      description,
+      project.start_date,
+      project.end_date
+    );
+    if (response === true) {
+      console.log("Project edited successfully!");
+    }
+  }
   useEffect(() => {
-    let aux = test_projects.find((item) => item.id === parseInt(project_id));
-    setProject(aux);
+    if (
+      user.role != "Admin" &&
+      user.role != "Head of Department" &&
+      user.role != "Account Manager"
+    ) {
+      navigate("/projects");
+    }
+    async function getProject() {
+      try {
+        let response = await fetch(
+          `${process.env.BACKEND_URL}/api/projects/${project_id}`
+        );
+        let data = await response.json();
+        setProject(data);
+      } catch (error) {}
+    }
+    getProject();
+    return () => {};
   }, []);
+
   return (
     <>
-      <div className="container-fluid col-11 mt-3">
+      <div className="container-fluid col-9 mt-3">
         <div className="row col-1 mb-3">
           <Link type="button" className="btn btn-success p-0" to="/projects">
-            {`< Go back`}
+            <i className="fa-solid fa-arrow-left"></i>
           </Link>
         </div>
         <div className="row">
           <div className="card mb-3 p-0 border border-warning">
             <div className="row g-0">
               <div className="col-md-12">
-                <div className="card-body d-flex justify-content-evenly">
-                  <div className="col-3">
+                <div className="card-body">
+                  <div className="mb-3">
+                    <input
+                      type="text"
+                      required
+                      className="form-control"
+                      id="projectTitleInput"
+                      defaultValue={project?.project_name}
+                      placeholder="Project Title"
+                    />
+                  </div>
+                  {/* <div className="border-bottom">
                     <h5 className="card-title fs-1">{project?.project_name}</h5>
-                    <div className="text-body-secondary text-start p-2 rounded mb-1">
-                      ► Manager: {project?.account_manager_name}
+                  </div> */}
+                  <div className="d-flex justify-content-center mt-3 ms-3">
+                    <div className="col-3 border-end">
+                      <div className="text-body-secondary mb-3 me-3">
+                        ► Manager: {data?.account_manager_id}
+                        <EmployeeList role="Head" />
+                      </div>
+                      <div className="text-body-secondary mb-3 me-3">
+                        ► Assistant: {data?.assistant_id}
+                        <EmployeeList role="Virtual" />
+                      </div>
+                      <div className="text-body-secondary mb-3 me-3">
+                        ► Customer: {data?.customer_id}
+                      </div>
+                      <div className="text-body-secondary mb-3 me-3">
+                        ► Start date: {formatDate(project?.start_date)}
+                      </div>
+                      <div className="text-body-secondary mb-3 me-3">
+                        ► End date:{" "}
+                        {project?.end_date === null
+                          ? "Ongoing"
+                          : formatDate(project?.end_date)}
+                      </div>
                     </div>
-                    <div className="text-body-secondary p-2 rounded mb-1">
-                      ► Assistant: {project?.assistant_name}
-                    </div>
-                    <div className="text-body-secondary p-2 rounded mb-1">
-                      ► Customer: {project?.customer_name}
-                    </div>
-                    <div className="text-body-secondary p-2 rounded mb-1">
-                      ► Start date: {formatDate(project?.start_date)}
-                    </div>
-                    <div className="text-body-secondary p-2 rounded mb-1">
-                      ► End date:{" "}
-                      {project?.end_date === null
-                        ? "Ongoing"
-                        : formatDate(project?.end_date)}
+                    <div className="col-9 card-text ms-3 me-3">
+                      <h5 className="card-title fs-4">Description</h5>
+                      <textarea
+                        type="text"
+                        className="form-control"
+                        id="projectDescriptionInput"
+                        defaultValue={project?.description}
+                        placeholder="Project Description"
+                      ></textarea>
                     </div>
                   </div>
-                  <div className="card-text d-flex flex-column">
-                    <h5 className="card-title fs-4">Description</h5>
-                    <p className="card-text">{project?.description}</p>
+                  <div className="float-end mb-3 mt-3">
+                    <button
+                      type="button"
+                      className="btn btn-success"
+                      onClick={handleSubmit}
+                    >
+                      Submit changes
+                    </button>
                   </div>
                 </div>
               </div>

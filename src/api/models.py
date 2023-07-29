@@ -14,6 +14,7 @@ class Roles(str, Enum):
     admin = 'Admin'
     head_of_department = 'Head of Department'
     account_manager = 'Account Manager'
+    account_manager = 'Account Manager'
     virtual_assistant = 'Virtual Assistant'
     member = 'Department member'
 
@@ -29,7 +30,7 @@ class Departments(str, Enum):
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(120), unique=True, nullable=False)
-    password = db.Column(db.String(20), unique=False, nullable=False)
+    password = db.Column(db.String(256), unique=False, nullable=False)
     department = db.Column(db.Enum(Departments), nullable=False)
     role = db.Column(db.Enum(Roles), nullable=False, default=Roles.member)
     name = db.Column(db.String(20), unique=False, nullable=False)
@@ -71,6 +72,15 @@ class Project(db.Model):
         db.Integer, db.ForeignKey('user.id'), nullable=False)
     customer_id = db.Column(db.Integer, db.ForeignKey(
         'customer.id'), nullable=False)
+    account_manager_id = db.Column(
+        db.Integer, db.ForeignKey('user.id'), nullable=False)
+    assistant_id = db.Column(
+        db.Integer, db.ForeignKey('user.id'), nullable=False)
+    customer_id = db.Column(db.Integer, db.ForeignKey(
+        'customer.id'), nullable=False)
+    description = db.Column(db.Text, nullable=True)
+    start_date = db.Column(db.DateTime, default=datetime.utcnow)
+    end_date = db.Column(db.DateTime, nullable=True)
 
     def __repr__(self):
         return f'<Project {self.project_name}>'

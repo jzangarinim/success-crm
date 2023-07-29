@@ -1,0 +1,7 @@
+.project-name {
+  cursor: pointer;
+}
+
+.project-name:hover {
+  filter: brightness(90%);
+}
