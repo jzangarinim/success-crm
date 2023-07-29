@@ -35,6 +35,16 @@ def get_one_user(user_id=None):
         return jsonify({"message": "bad request"}), 400
 
 
+@api.route('/users/<department>', methods=['GET'])
+def get_department(department=None):
+    if department == "hr" or department == "sales" or department == "finances" or department == "trial" or department == "recruitment":
+        users = User()
+        users = users.query.filter_by(department=department).all()
+            return jsonify({"message": "user not found"}), 404
+    else:
+        return jsonify({"message": "bad request"}), 400
+
+
 @api.route('/users/<int:user_id>/projects', methods=['GET'])
 def get_user_projects(user_id=None):
     projects = Project.query.filter_by(account_manager_id=user_id).all()
@@ -133,6 +143,82 @@ def handle_login():
 # /customers endpoints
 
 
+@api.route('/customers', methods=['POST'])
+def add_customer():
+    if request.method == "POST":
+        data = request.json
+
+        if data.get("company_name") is None:
+            return jsonify({"message": "Wrong property"}), 400
+        if data.get("company_address") is None:
+            return jsonify({"message": "Wrong property"}), 400
+        if data.get("country") is None:
+            return jsonify({"message": "Wrong property"}), 400
+        if data.get("representative_name") is None:
+            return jsonify({"message": "Wrong property"}), 400
+        if data.get("representative_contact") is None:
+            return jsonify({"message": "Wrong property"}), 400
+
+        customer = User.query.filter_by(
+            company_name=data.get("company_name")).first()
+        if customer is not None:
+            return jsonify({"message": "The user all ready exist"})
+
+        if customer is None:
+            customer = Customer(company_name=data["company_name"], company_address=data["company_address"],
+                                country=data["country"], representative_name=data["representative_name"],
+                                representative_contact=data["representative_contact"])
+            db.session.add(customer)
+
+            try:
+                db.session.commit()
+                return jsonify(data), 201
+
+            except Exception as error:
+                print(error)
+                return jsonify({"message": error.args}), 500
+
+# /customers endpoints
+
+
+
+
+@api.route('/customers', methods=['POST'])
+def add_customer():
+    if request.method == "POST":
+        data = request.json
+
+        if data.get("company_name") is None:
+            return jsonify({"message": "Wrong property"}), 400
+        if data.get("company_address") is None:
+            return jsonify({"message": "Wrong property"}), 400
+        if data.get("country") is None:
+            return jsonify({"message": "Wrong property"}), 400
+        if data.get("representative_name") is None:
+            return jsonify({"message": "Wrong property"}), 400
+        if data.get("representative_contact") is None:
+            return jsonify({"message": "Wrong property"}), 400
+
+        customer = User.query.filter_by(
+            company_name=data.get("company_name")).first()
+        if customer is not None:
+            return jsonify({"message": "The user all ready exist"})
+
+        if customer is None:
+            customer = Customer(company_name=data["company_name"], company_address=data["company_address"],
+                                country=data["country"], representative_name=data["representative_name"],
+                                representative_contact=data["representative_contact"])
+            db.session.add(customer)
+
+            try:
+                db.session.commit()
+                return jsonify(data), 201
+
+            except Exception as error:
+                print(error)
+                return jsonify({"message": error.args}), 500
+
+
 @api.route('/customers', methods=['GET'])
 def get_customers():
     customers = Customer()
@@ -160,6 +246,9 @@ def get_one_customer(customer_id=None):
 def get_projects():
     projects = Project()
     projects = projects.query.all()
+    projects = list(map(lambda item: item.serialize(), projects))
+    return jsonify(projects)
+
     aux_projects = []
     for project in projects:
         aux_projects.append(project.serialize())
@@ -179,6 +268,45 @@ def get_one_project(project_id=None):
     if project_id is not None:
         project = Project()
         project = project.query.get(project_id)
+
+        if project is not None:
+            return jsonify(project.serialize()), 200
+
+        else:
+            return jsonify({"message": "project not found"}), 404
+    else:
+        return jsonify({"message": "bad request"}), 400
+
+
+def get_customer(id=None):
+    if id is not None:
+        customer = Customer()
+        customer = customer.query.get(id)
+
+        if customer is not None:
+            return jsonify(customer.company_name.serialize()), 200
+
+        else:
+            return jsonify({"message": "Customer not found"}), 404
+
+
+def get_assistant(id=None):
+    if id is not None:
+        assistant = User()
+        assistant = assistant.query.get(id)
+
+        if assistant is not None:
+            return jsonify(assistant.name.serialize(), assistant.last_name.serialize()), 200
+
+        else:
+            return jsonify({"message": "Assistant not found"}), 404
+
+
+@api.route('/projects/<int:project_id>', methods=['PUT'])
+def edit_project():
+    data = request.json
+    project = Project.query.filter_by(
+        project_id=data.get("project_id")).first()
         if project is not None:
             return jsonify(project.serialize()), 200
         else:
@@ -245,3 +373,4 @@ def add_project():
         except Exception as error:
             print(error)
             return jsonify({"message": error.args}), 500
+
