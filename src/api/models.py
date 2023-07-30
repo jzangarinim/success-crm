@@ -14,7 +14,6 @@ class Roles(str, Enum):
     admin = 'Admin'
     head_of_department = 'Head of Department'
     account_manager = 'Account Manager'
-    account_manager = 'Account Manager'
     virtual_assistant = 'Virtual Assistant'
     member = 'Department member'
 

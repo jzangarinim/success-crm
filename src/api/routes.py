@@ -8,6 +8,13 @@ from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identi
 
 api = Blueprint('api', __name__)
 
+def set_password(password, salt):
+    return generate_password_hash(f"{password}{salt}")
+
+def check_password(hash_password, password, salt):
+    return check_password_hash(hash_password, f"{password}{salt}")
+
+
 # /users endpoints
 
 @api.route('/users', methods=['GET'])
@@ -35,16 +42,6 @@ def get_one_user(user_id=None):
         return jsonify({"message": "bad request"}), 400
 
 
-@api.route('/users/<department>', methods=['GET'])
-def get_department(department=None):
-    if department == "hr" or department == "sales" or department == "finances" or department == "trial" or department == "recruitment":
-        users = User()
-        users = users.query.filter_by(department=department).all()
-            return jsonify({"message": "user not found"}), 404
-    else:
-        return jsonify({"message": "bad request"}), 400
-
-
 @api.route('/users/<int:user_id>/projects', methods=['GET'])
 def get_user_projects(user_id=None):
     projects = Project.query.filter_by(account_manager_id=user_id).all()
@@ -64,6 +61,7 @@ def get_user_projects(user_id=None):
         project["customer_id"] = f"{customer.name} {customer.last_name}"
     return jsonify(aux_projects), 200
 
+
 @api.route('/users/<department>', methods=['GET'])
 def get_department(department=None):
     if department == "hr" or department == "sales" or department == "finances" or department == "trial" or department == "recruitment":
@@ -77,11 +75,6 @@ def get_department(department=None):
     else:
         return jsonify({"message": "bad request"}), 400
 
-def set_password(password, salt):
-    return generate_password_hash(f"{password}{salt}")
-
-def check_password(hash_password, password, salt):
-    return check_password_hash(hash_password, f"{password}{salt}")
 
 @api.route('/users', methods=['POST'])
 def add_user():
@@ -108,7 +101,7 @@ def add_user():
             return jsonify({"message": "The user all ready exist"})
 
         if user is None:
-            salt = b64encode(as.urandom(32)).decode('utf-8')
+            salt = b64encode(os.urandom(32)).decode('utf-8')
             password = set_password (password, salt)
             user = User(email=data["email"], password=data["password"],
                         department=data["department"], name=data["name"],
@@ -123,6 +116,7 @@ def add_user():
             except Exception as error:
                 print(error)
                 return jsonify({"message": error.args}), 500
+
 
 @api.route('/login', methods=['POST'])
 def handle_login():
@@ -142,54 +136,10 @@ def handle_login():
                     token = create_access_token(identity = user.id)
                     return jsonify({"token":token}), 200
                 else:
-                    return jsonify({"message":"Bad Credential"}),400
-                
-
-
+                    return jsonify({"message":"Bad Credential"}),400               
 
 
 # /customers endpoints
-
-
-@api.route('/customers', methods=['POST'])
-def add_customer():
-    if request.method == "POST":
-        data = request.json
-
-        if data.get("company_name") is None:
-            return jsonify({"message": "Wrong property"}), 400
-        if data.get("company_address") is None:
-            return jsonify({"message": "Wrong property"}), 400
-        if data.get("country") is None:
-            return jsonify({"message": "Wrong property"}), 400
-        if data.get("representative_name") is None:
-            return jsonify({"message": "Wrong property"}), 400
-        if data.get("representative_contact") is None:
-            return jsonify({"message": "Wrong property"}), 400
-
-        customer = User.query.filter_by(
-            company_name=data.get("company_name")).first()
-        if customer is not None:
-            return jsonify({"message": "The user all ready exist"})
-
-        if customer is None:
-            customer = Customer(company_name=data["company_name"], company_address=data["company_address"],
-                                country=data["country"], representative_name=data["representative_name"],
-                                representative_contact=data["representative_contact"])
-            db.session.add(customer)
-
-            try:
-                db.session.commit()
-                return jsonify(data), 201
-
-            except Exception as error:
-                print(error)
-                return jsonify({"message": error.args}), 500
-
-# /customers endpoints
-
-
-
 
 @api.route('/customers', methods=['POST'])
 def add_customer():
@@ -247,8 +197,8 @@ def get_one_customer(customer_id=None):
     else:
         return jsonify({"message": "bad request"}), 400
 
-# /projects endpoints
 
+# /projects endpoints
 
 @api.route('/projects', methods=['GET'])
 def get_projects():
@@ -280,43 +230,6 @@ def get_one_project(project_id=None):
         if project is not None:
             return jsonify(project.serialize()), 200
 
-        else:
-            return jsonify({"message": "project not found"}), 404
-    else:
-        return jsonify({"message": "bad request"}), 400
-
-
-def get_customer(id=None):
-    if id is not None:
-        customer = Customer()
-        customer = customer.query.get(id)
-
-        if customer is not None:
-            return jsonify(customer.company_name.serialize()), 200
-
-        else:
-            return jsonify({"message": "Customer not found"}), 404
-
-
-def get_assistant(id=None):
-    if id is not None:
-        assistant = User()
-        assistant = assistant.query.get(id)
-
-        if assistant is not None:
-            return jsonify(assistant.name.serialize(), assistant.last_name.serialize()), 200
-
-        else:
-            return jsonify({"message": "Assistant not found"}), 404
-
-
-@api.route('/projects/<int:project_id>', methods=['PUT'])
-def edit_project():
-    data = request.json
-    project = Project.query.filter_by(
-        project_id=data.get("project_id")).first()
-        if project is not None:
-            return jsonify(project.serialize()), 200
         else:
             return jsonify({"message": "project not found"}), 404
     else:
