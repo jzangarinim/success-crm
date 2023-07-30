@@ -4,9 +4,7 @@ import ScrollToTop from "./component/scrollToTop";
 import { BackendURL } from "./component/backendURL";
 
 import { Home } from "./pages/home";
-import { Demo } from "./pages/demo";
 import { Register } from "./pages/register";
-import { Single } from "./pages/single";
 import { Projects } from "./pages/Projects.jsx";
 import { EditProject } from "./pages/EditProject.jsx";
 import { Employees } from "./pages/Employees.jsx";
@@ -19,6 +17,7 @@ import { Footer } from "./component/footer";
 import LoginPage from "./pages/LoginPage";
 import { ProjectList } from "./component/projectCard.jsx";
 import { Create_project } from "./pages/createProject";
+// import { Dashboard } from "./pages/dashboard";
 
 //create your first component
 const Layout = () => {
@@ -38,8 +37,8 @@ const Layout = () => {
             <Route element={<Home />} path="/" />
             <Route element={<LoginPage />} path="/login" />
             <Route element={<Register />} path="/register" />
-            <Route element={<Demo />} path="/demo" />
             <Route element={<Projects />} path="/projects" />
+            {/* <Route element={<Dashboard />} path="/dashb" /> */}
             <Route element={<Create_project />} path="/projects/create" />
             <Route element={<ProjectList />} path="/projects/:project_id" />
             <Route
@@ -49,7 +48,6 @@ const Layout = () => {
             <Route element={<Employees />} path="/employees" />
             <Route element={<ViewEmployee />} path="/employees/:id" />
             <Route element={<Customers />} path="/customers" />
-            <Route element={<Single />} path="/single/:theid" />
             <Route element={<h1>Not found!</h1>} />
           </Routes>
           <Footer />

@@ -54,7 +54,9 @@ class User(db.Model):
             "department": self.department,
             "role": self.role,
             "city": self.city,
-            "country": self.country
+            "country": self.country,
+            "created_at": self.created_at,
+            "is_active": self.is_active
             # do not serialize the password, its a security breach
         }
 

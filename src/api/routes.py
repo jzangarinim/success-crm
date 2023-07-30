@@ -8,14 +8,17 @@ from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identi
 
 api = Blueprint('api', __name__)
 
+
 def set_password(password, salt):
     return generate_password_hash(f"{password}{salt}")
+
 
 def check_password(hash_password, password, salt):
     return check_password_hash(hash_password, f"{password}{salt}")
 
 
 # /users endpoints
+
 
 @api.route('/users', methods=['GET'])
 @jwt_required()
@@ -53,7 +56,8 @@ def get_user_projects(user_id=None):
     for project in projects:
         aux_projects.append(project.serialize())
     for project in aux_projects:
-        manager = User.query.filter_by(id=project["account_manager_id"]).first()
+        manager = User.query.filter_by(
+            id=project["account_manager_id"]).first()
         assistant = User.query.filter_by(id=project["assistant_id"]).first()
         customer = User.query.filter_by(id=project["customer_id"]).first()
         project["account_manager_id"] = f"{manager.name} {manager.last_name}"
@@ -76,6 +80,14 @@ def get_department(department=None):
         return jsonify({"message": "bad request"}), 400
 
 
+def set_password(password, salt):
+    return generate_password_hash(f"{password}{salt}")
+
+
+def check_password(hash_password, password, salt):
+    return check_password_hash(hash_password, f"{password}{salt}")
+
+
 @api.route('/users', methods=['POST'])
 def add_user():
     if request.method == "POST":
@@ -95,18 +107,20 @@ def add_user():
             return jsonify({"message": "Wrong property"}), 400
         if data.get("country") is None:
             return jsonify({"message": "Wrong property"}), 400
-        
+
         user = User.query.filter_by(email=data.get("email")).first()
         if user is not None:
             return jsonify({"message": "The user all ready exist"})
 
         if user is None:
             salt = b64encode(os.urandom(32)).decode('utf-8')
-            password = set_password (password, salt)
+            password = set_password(password, salt)
+            salt = b64encode(os.urandom(32)).decode('utf-8')
+            password = set_password(password, salt)
             user = User(email=data["email"], password=data["password"],
                         department=data["department"], name=data["name"],
                         last_name=data["last_name"], city=data["city"],
-                        country=data["country"], salt = salt)
+                        country=data["country"], salt=salt)
             db.session.add(user)
 
             try:
@@ -122,7 +136,7 @@ def add_user():
 def handle_login():
     if request.method == "POST":
         body = request.json
-        email = body.get ("email", None)
+        email = body.get("email", None)
         password = body.get("password", None)
 
         if email is None or password is None:
@@ -130,13 +144,13 @@ def handle_login():
         else:
             user = User.query.filter_by(email=email).one_or_none()
             if user is None:
-                return jsonify({"message":"Bad credential"}),400
+                return jsonify({"message": "Bad credential"}), 400
             else:
                 if check_password(user.password, password, user.salt):
-                    token = create_access_token(identity = user.id)
-                    return jsonify({"token":token}), 200
+                    token = create_access_token(identity=user.id)
+                    return jsonify({"token": token}), 200
                 else:
-                    return jsonify({"message":"Bad Credential"}),400               
+                    return jsonify({"message": "Bad Credential"}), 400
 
 
 # /customers endpoints
@@ -236,6 +250,30 @@ def get_one_project(project_id=None):
         return jsonify({"message": "bad request"}), 400
 
 
+def get_customer(id=None):
+    if id is not None:
+        customer = Customer()
+        customer = customer.query.get(id)
+
+        if customer is not None:
+            return jsonify(customer.company_name.serialize()), 200
+
+        else:
+            return jsonify({"message": "Customer not found"}), 404
+
+
+def get_assistant(id=None):
+    if id is not None:
+        assistant = User()
+        assistant = assistant.query.get(id)
+
+        if assistant is not None:
+            return jsonify(assistant.name.serialize(), assistant.last_name.serialize()), 200
+
+        else:
+            return jsonify({"message": "Assistant not found"}), 404
+
+
 @api.route('/projects/<int:project_id>', methods=['PUT'])
 def edit_project(project_id=None):
     data = request.json
@@ -294,4 +332,3 @@ def add_project():
         except Exception as error:
             print(error)
             return jsonify({"message": error.args}), 500
-
