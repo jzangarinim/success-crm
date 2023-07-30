@@ -54,6 +54,25 @@ const getState = ({ getStore, getActions, setStore }) => {
         }
       },
 
+      Login: async (user) => {
+        const store = getStore();
+        const actions = getActions();
+        try {
+          let response = await fetch(`${process.env.BACKEND_URL}/api/login`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(user),
+          });
+          if (response.ok) {
+            console.log(user);
+            return true;
+          }
+        } catch (err) {
+          console.log(err);
+        }
+      },
+
+
       editProject: async (
         id,
         title,

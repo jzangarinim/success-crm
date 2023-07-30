@@ -5,6 +5,15 @@ from api.utils import generate_sitemap, APIException
 
 api = Blueprint('api', __name__)
 
+
+def set_password(password, salt):
+    return generate_password_hash(f"{password}{salt}")
+
+
+def check_password(hash_password, password, salt):
+    return check_password_hash(hash_password, f"{password}{salt}")
+
+
 # /users endpoints
 
 
@@ -38,9 +47,19 @@ def get_user_projects(user_id=None):
     if len(projects) == 0:
         projects = Project.query.filter_by(assistant_id=user_id).all()
         if len(projects) == 0:
-            return jsonify({"message": "no projects found"}), 404
-    projects = list(map(lambda item: item.serialize(), projects))
-    return jsonify(projects), 200
+            return jsonify([]), 404
+    aux_projects = []
+    for project in projects:
+        aux_projects.append(project.serialize())
+    for project in aux_projects:
+        manager = User.query.filter_by(
+            id=project["account_manager_id"]).first()
+        assistant = User.query.filter_by(id=project["assistant_id"]).first()
+        customer = User.query.filter_by(id=project["customer_id"]).first()
+        project["account_manager_id"] = f"{manager.name} {manager.last_name}"
+        project["assistant_id"] = f"{assistant.name} {assistant.last_name}"
+        project["customer_id"] = f"{customer.name} {customer.last_name}"
+    return jsonify(aux_projects), 200
 
 
 @api.route('/users/<department>', methods=['GET'])
@@ -114,7 +133,6 @@ def handle_login():
 
 # /customers endpoints
 
-
 @api.route('/customers', methods=['POST'])
 def add_customer():
     if request.method == "POST":
@@ -171,8 +189,8 @@ def get_one_customer(customer_id=None):
     else:
         return jsonify({"message": "bad request"}), 400
 
-# /projects endpoints
 
+# /projects endpoints
 
 @api.route('/projects', methods=['GET'])
 def get_projects():
