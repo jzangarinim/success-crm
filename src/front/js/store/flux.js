@@ -36,7 +36,7 @@ const getState = ({ getStore, getActions, setStore }) => {
         }
       },
 
-      Register: async (user) => {
+      Register: async (user)=> {
         const store = getStore();
         const actions = getActions();
         try {

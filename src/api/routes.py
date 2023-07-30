@@ -76,11 +76,12 @@ def add_user():
         if data.get("country") is None:
             return jsonify({"message": "Wrong property"}), 400
 
-        user = User.query.filter_by(email=data.get("email")).first()
-        if user is not None:
+        user = User()
+        user_email = user.query.filter_by(email=data.get("email")).first()
+        if user_email is not None:
             return jsonify({"message": "The user all ready exist"})
 
-        if user is None:
+        if user_email is None:
             user = User(email=data["email"], password=data["password"],
                         department=data["department"], name=data["name"],
                         last_name=data["last_name"], city=data["city"],
@@ -89,7 +90,7 @@ def add_user():
 
             try:
                 db.session.commit()
-                return jsonify(body), 201
+                return jsonify(data), 201
 
             except Exception as error:
                 print(error)
