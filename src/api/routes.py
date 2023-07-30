@@ -110,9 +110,9 @@ def add_user():
 @api.route('/login', methods=['POST'])
 def handle_login():
     if request.method == "POST":
-        body = request.json
-        email = body.get("email", None)
-        password = body.get("password", None)
+        data = request.json
+        email = data.get("email", None)
+        password = data.get("password", None)
 
         if email is None or password is None:
             return jsonify("You need an Email and a Password"), 400
