@@ -17,15 +17,16 @@ const getState = ({ getStore, getActions, setStore }) => {
       // },
     },
     actions: {
+
       Project: async (        
-        id,
         title,
         managerId,
         assistantId,
         customerId,
         description,
         startDate,
-        endDate) => {
+        endDate
+        ) => {
         const store = getStore();
         const actions = getActions();
         try {
@@ -52,17 +53,18 @@ const getState = ({ getStore, getActions, setStore }) => {
       },
 
       Register: async (
-        id,
-      email,
-      password,
-      department,
-      name,
-      last_name,
-      city,
-      country,
-      )=> {
-        try {
-          let response = await fetch(`${process.env.BACKEND_URL}/api/users`, {
+        email,
+        password,
+        department,
+        name,
+        last_name,
+        city,
+        country
+        ) => {
+          try {
+          let response = await fetch(
+            `${process.env.BACKEND_URL}/api/users`,
+            {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
@@ -70,11 +72,12 @@ const getState = ({ getStore, getActions, setStore }) => {
               password: `${password}`,
               department: `${department}`,
               name: `${name}`,
-              last_name: `${lastName}`,
+              last_name: `${last_name}`,
               city: `${city}`,
               country: `${country}`,
             }),
-          });
+          }
+          );
           if (response.ok) {
             return true;
           }
@@ -86,21 +89,23 @@ const getState = ({ getStore, getActions, setStore }) => {
       Login: async (      
         email,
         password,
-        )=> {
+        ) => {
           try {
-            let response = await fetch(`${process.env.BACKEND_URL}/api/login`, {
+            let response = await fetch(
+              `${process.env.BACKEND_URL}/api/login`, 
+              {
               method: "POST",
               headers: { "Content-Type": "application/json" },
               body: JSON.stringify({
                 email: `${email}`,
               }),
-            });
+              }
+            );
             if (response.ok) {
               return true;
             }
-          } catch (err) {
-            console.log(err);
-          }
+          } 
+          catch (err) {}
         },
  
 

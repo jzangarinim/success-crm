@@ -13,7 +13,7 @@ export const Login = () => {
   };
 
   function handleLogin() {
-    actions.Login(login);
+    actions.Login();
   }
 
   return (

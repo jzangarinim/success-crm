@@ -20,7 +20,7 @@ export const Register_user = () => {
   };
 
   function handleRegister() {
-    actions.Register(register);
+    actions.Register();
   }
 
   return (
