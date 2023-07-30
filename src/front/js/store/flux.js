@@ -3,10 +3,10 @@ const getState = ({ getStore, getActions, setStore }) => {
     store: {
       user: {
         email: "default@example.com",
-        name: "Jhon" ,
-        last_name: "Snow" ,
+        name: "Jhon",
+        last_name: "Snow",
         city: "Caracas",
-        country: "Venezuela" ,
+        country: "Venezuela",
       },
       // project: {
       //   project_name: "",
@@ -107,7 +107,6 @@ const getState = ({ getStore, getActions, setStore }) => {
           console.log(err);
         }
       },
-
 
       editProject: async (
         id,
