@@ -8,24 +8,39 @@ const getState = ({ getStore, getActions, setStore }) => {
         city: "Caracas",
         country: "Venezuela" ,
       },
-      users:[],
-      project: {
-        project_name: "",
-        account_manager_id: "",
-        assistant_id: "",
-        customer_id: "",
-        description: "",
-      },
+      // project: {
+      //   project_name: "",
+      //   account_manager_id: "",
+      //   assistant_id: "",
+      //   customer_id: "",
+      //   description: "",
+      // },
     },
     actions: {
-      Project: async (project) => {
+      Project: async (        
+        id,
+        title,
+        managerId,
+        assistantId,
+        customerId,
+        description,
+        startDate,
+        endDate) => {
         const store = getStore();
         const actions = getActions();
         try {
           let response = await fetch(`${process.env.BACKEND_URL}/api/projects`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(project),
+            body: JSON.stringify({
+              project_name: `${title}`,
+              account_manager_id: `${managerId}`,
+              assistant_id: `${assistantId}`,
+              customer_id: `${customerId}`,
+              description: `${description}`,
+              start_date: `${startDate}`,
+              end_date: `${endDate}`,
+            }),
         });
           if (response.ok) {
             console.log(project);
@@ -36,14 +51,29 @@ const getState = ({ getStore, getActions, setStore }) => {
         }
       },
 
-      Register: async (user)=> {
-        const store = getStore();
-        const actions = getActions();
+      Register: async (
+        id,
+      email,
+      password,
+      department,
+      name,
+      last_name,
+      city,
+      country,
+      )=> {
         try {
           let response = await fetch(`${process.env.BACKEND_URL}/api/users`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(user),
+            body: JSON.stringify({
+              email: `${email}`,
+              password: `${password}`,
+              department: `${department}`,
+              name: `${name}`,
+              last_name: `${lastName}`,
+              city: `${city}`,
+              country: `${country}`,
+            }),
           });
           if (response.ok) {
             console.log(user);
@@ -54,14 +84,20 @@ const getState = ({ getStore, getActions, setStore }) => {
         }
       },
 
-      Login: async (user) => {
+      Login: async (
+        id,
+        email,
+        password,
+      ) => {
         const store = getStore();
         const actions = getActions();
         try {
           let response = await fetch(`${process.env.BACKEND_URL}/api/login`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(user),
+            body: JSON.stringify({      
+              email: `${email}`
+            }),
           });
           if (response.ok) {
             console.log(user);

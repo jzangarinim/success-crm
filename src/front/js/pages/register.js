@@ -5,15 +5,7 @@ import { Link } from "react-router-dom";
 
 export const Register_user = () => {
   const { actions, store } = useContext(Context);
-  const [user, setUser] = useState({
-    name: "",
-    last_name: "",
-    email: "",
-    password: "",
-    department: "",
-    city: "",
-    country: "",
-  });
+  const [user, setUser] = useState();
   const handleChange = (event) => {
     setUser({ ...user, [event.target.name]: event.target.value });
   };

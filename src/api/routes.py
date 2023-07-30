@@ -16,7 +16,6 @@ def check_password(hash_password, password, salt):
 
 # /users endpoints
 
-
 @api.route('/users', methods=['GET'])
 def get_users():
     users = User()
