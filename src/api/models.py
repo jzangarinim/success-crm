@@ -95,9 +95,7 @@ class Project(db.Model):
             "description": self.description,
             "start_date": self.start_date,
             "end_date": self.end_date,
-            "company_name": self.customer.company_name,
-            "assistant_name": self.user.user_name,
-            "account_manager_name": self.user.user_name
+
         }
 
 
