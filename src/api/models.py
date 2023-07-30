@@ -1,6 +1,11 @@
+import os
+import sys
+
 from flask_sqlalchemy import SQLAlchemy
+# from sqlalchemy import Column, ForeignKey, Integer, String
 from datetime import datetime
 from enum import Enum
+from sqlalchemy.orm import relationship, declarative_base
 
 db = SQLAlchemy()
 
@@ -9,8 +14,10 @@ class Roles(str, Enum):
     admin = 'Admin'
     head_of_department = 'Head of Department'
     account_manager = 'Account Manager'
+    account_manager = 'Account Manager'
     virtual_assistant = 'Virtual Assistant'
     member = 'Department member'
+
 
 class Departments(str, Enum):
     hr = 'Human Resources'
@@ -18,6 +25,7 @@ class Departments(str, Enum):
     finances = 'Finances'
     trial = 'Trial'
     recruitment = 'Recruitment'
+
 
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -31,7 +39,8 @@ class User(db.Model):
     weekly_availability = db.Column(db.Integer, nullable=True)
     city = db.Column(db.String(50), nullable=False)
     country = db.Column(db.String(50), nullable=False)
-    is_active = db.Column(db.Boolean(), unique=False, nullable=False, default=False)
+    is_active = db.Column(db.Boolean(), unique=False,
+                          nullable=False, default=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
     def __repr__(self):
@@ -50,19 +59,32 @@ class User(db.Model):
             # do not serialize the password, its a security breach
         }
 
+
 class Project(db.Model):
     project_id = db.Column(db.Integer, primary_key=True)
     project_name = db.Column(db.String(100), unique=False, nullable=False)
-    account_manager_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-    assistant_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-    customer_id = db.Column(db.Integer, db.ForeignKey('customer.id'), nullable=False)
+    description = db.Column(db.Text, nullable=True)
+    start_date = db.Column(db.DateTime, default=datetime.utcnow)
+    end_date = db.Column(db.DateTime, nullable=True)
+    account_manager_id = db.Column(
+        db.Integer, db.ForeignKey('user.id'), nullable=False)
+    assistant_id = db.Column(
+        db.Integer, db.ForeignKey('user.id'), nullable=False)
+    customer_id = db.Column(db.Integer, db.ForeignKey(
+        'customer.id'), nullable=False)
+    account_manager_id = db.Column(
+        db.Integer, db.ForeignKey('user.id'), nullable=False)
+    assistant_id = db.Column(
+        db.Integer, db.ForeignKey('user.id'), nullable=False)
+    customer_id = db.Column(db.Integer, db.ForeignKey(
+        'customer.id'), nullable=False)
     description = db.Column(db.Text, nullable=True)
     start_date = db.Column(db.DateTime, default=datetime.utcnow)
     end_date = db.Column(db.DateTime, nullable=True)
 
     def __repr__(self):
         return f'<Project {self.project_name}>'
-    
+
     def serialize(self):
         return {
             "project_id": self.project_id,
@@ -72,8 +94,12 @@ class Project(db.Model):
             "customer_id": self.customer_id,
             "description": self.description,
             "start_date": self.start_date,
-            "end_date": self.end_date
+            "end_date": self.end_date,
+            "company_name": self.customer.company_name,
+            "assistant_name": self.user.user_name,
+            "account_manager_name": self.user.user_name
         }
+
 
 class Customer(db.Model):
     id = db.Column(db.Integer, primary_key=True)
