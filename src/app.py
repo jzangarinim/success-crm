@@ -36,8 +36,6 @@ db.init_app(app)
 app.config['JWT_SECRET_KEY'] = os.getenv('FLASK_APP_KEY')
 jwt = JWTManager(app)
 
-db.init_app(app)
-
 # Allow CORS requests to this API
 CORS(app)
 

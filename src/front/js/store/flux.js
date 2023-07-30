@@ -3,12 +3,12 @@ const getState = ({ getStore, getActions, setStore }) => {
     store: {
       user: {
         email: "default@example.com",
-        name: "Jhon" ,
-        last_name: "Snow" ,
+        name: "Jhon",
+        last_name: "Snow",
         city: "Caracas",
-        country: "Venezuela" ,
+        country: "Venezuela",
       },
-      users:[],
+      users: [],
       project: {
         project_name: "",
         account_manager_id: "",
@@ -22,11 +22,14 @@ const getState = ({ getStore, getActions, setStore }) => {
         const store = getStore();
         const actions = getActions();
         try {
-          let response = await fetch(`${process.env.BACKEND_URL}/api/projects`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(project),
-        });
+          let response = await fetch(
+            `${process.env.BACKEND_URL}/api/projects`,
+            {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify(project),
+            }
+          );
           if (response.ok) {
             console.log(project);
             return true;
@@ -36,7 +39,7 @@ const getState = ({ getStore, getActions, setStore }) => {
         }
       },
 
-      Register: async (user)=> {
+      Register: async (user) => {
         const store = getStore();
         const actions = getActions();
         try {
@@ -71,7 +74,6 @@ const getState = ({ getStore, getActions, setStore }) => {
           console.log(err);
         }
       },
-
 
       editProject: async (
         id,
