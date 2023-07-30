@@ -76,7 +76,6 @@ const getState = ({ getStore, getActions, setStore }) => {
             }),
           });
           if (response.ok) {
-            console.log(user);
             return true;
           }
         } catch (err) {
@@ -84,29 +83,26 @@ const getState = ({ getStore, getActions, setStore }) => {
         }
       },
 
-      Login: async (
-        id,
+      Login: async (      
         email,
         password,
-      ) => {
-        const store = getStore();
-        const actions = getActions();
-        try {
-          let response = await fetch(`${process.env.BACKEND_URL}/api/login`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({      
-              email: `${email}`
-            }),
-          });
-          if (response.ok) {
-            console.log(user);
-            return true;
+        )=> {
+          try {
+            let response = await fetch(`${process.env.BACKEND_URL}/api/login`, {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                email: `${email}`,
+              }),
+            });
+            if (response.ok) {
+              return true;
+            }
+          } catch (err) {
+            console.log(err);
           }
-        } catch (err) {
-          console.log(err);
-        }
-      },
+        },
+ 
 
       editProject: async (
         id,

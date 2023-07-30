@@ -6,14 +6,6 @@ from api.utils import generate_sitemap, APIException
 api = Blueprint('api', __name__)
 
 
-def set_password(password, salt):
-    return generate_password_hash(f"{password}{salt}")
-
-
-def check_password(hash_password, password, salt):
-    return check_password_hash(hash_password, f"{password}{salt}")
-
-
 # /users endpoints
 
 @api.route('/users', methods=['GET'])
@@ -125,7 +117,7 @@ def handle_login():
         if email is None or password is None:
             return jsonify("You need an Email and a Password"), 400
         else:
-            user = User.query.filter_by(email=email).one_or_none()
+            user = User.query.filter_by(email=email).first()
             if user is None:
                 return jsonify({"message": "Bad credential"}), 400
 
