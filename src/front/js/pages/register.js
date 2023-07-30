@@ -3,7 +3,7 @@ import { Context } from "../store/appContext";
 import "../../styles/register.css";
 import { Link } from "react-router-dom";
 
-export const Register = () => {
+export const Register_user = () => {
   const { actions, store } = useContext(Context);
   const [user, setUser] = useState({
     name: "",

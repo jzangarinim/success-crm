@@ -14,7 +14,6 @@ class Roles(str, Enum):
     admin = 'Admin'
     head_of_department = 'Head of Department'
     account_manager = 'Account Manager'
-    account_manager = 'Account Manager'
     virtual_assistant = 'Virtual Assistant'
     member = 'Department member'
 
@@ -55,7 +54,9 @@ class User(db.Model):
             "department": self.department,
             "role": self.role,
             "city": self.city,
-            "country": self.country
+            "country": self.country,
+            "created_at": self.created_at,
+            "is_active": self.is_active
             # do not serialize the password, its a security breach
         }
 
@@ -72,15 +73,6 @@ class Project(db.Model):
         db.Integer, db.ForeignKey('user.id'), nullable=False)
     customer_id = db.Column(db.Integer, db.ForeignKey(
         'customer.id'), nullable=False)
-    account_manager_id = db.Column(
-        db.Integer, db.ForeignKey('user.id'), nullable=False)
-    assistant_id = db.Column(
-        db.Integer, db.ForeignKey('user.id'), nullable=False)
-    customer_id = db.Column(db.Integer, db.ForeignKey(
-        'customer.id'), nullable=False)
-    description = db.Column(db.Text, nullable=True)
-    start_date = db.Column(db.DateTime, default=datetime.utcnow)
-    end_date = db.Column(db.DateTime, nullable=True)
 
     def __repr__(self):
         return f'<Project {self.project_name}>'
