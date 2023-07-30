@@ -26,22 +26,24 @@ const getState = ({ getStore, getActions, setStore }) => {
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(project),
         });
-        if (response.ok) {
-          console.log(project)
-          return true
-          let response = await fetch(
-            `${process.env.BACKEND_URL}/api/regproject`,
-            {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify(project),
-            }
-          );
           if (response.ok) {
-            console.log(project);
-            return true;
-          }
-        } catch (err) {
+            console.log(project)
+            return true
+            let response = await fetch(
+              `${process.env.BACKEND_URL}/api/regproject`,
+              {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(project),
+              }
+            );
+            if (response.ok) {
+              console.log(project);
+              return true;
+            }
+          } 
+        
+        catch (err) {
           console.log(err);
         }
       },
