@@ -22,9 +22,7 @@ const getState = ({ getStore, getActions, setStore }) => {
         managerId,
         assistantId,
         customerId,
-        description,
-        startDate,
-        endDate
+        description
       ) => {
         const store = getStore();
         const actions = getActions();
@@ -40,13 +38,10 @@ const getState = ({ getStore, getActions, setStore }) => {
                 assistant_id: `${assistantId}`,
                 customer_id: `${customerId}`,
                 description: `${description}`,
-                start_date: `${startDate}`,
-                end_date: `${endDate}`,
               }),
             }
           );
           if (response.ok) {
-            console.log(project);
             return true;
           }
         } catch (err) {
