@@ -26,7 +26,7 @@ export const Register_user = () => {
     let department = document.getElementById("departmentSelect").value;
     let city = document.getElementById("cityInput").value;
     let country = document.getElementById("countryInput").value;
-    let password = document.getElementById("inputPassword5").value;
+    let password = document.getElementById("passwordInput").value;
     actions.Register(
       email,
       password,
@@ -165,13 +165,13 @@ export const Register_user = () => {
             />
           </div>
           <div className="row mb-3">
-            <label htmlFor="inputPassword5" className="form-label">
+            <label htmlFor="passwordInput" className="form-label">
               Password
             </label>
             <input
               type="password"
               required
-              id="inputPassword5"
+              id="passwordInput"
               className="form-control"
               aria-labelledby="passwordHelpBlock"
               defaultValue={user.password}

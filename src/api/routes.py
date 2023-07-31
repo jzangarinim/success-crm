@@ -113,9 +113,11 @@ def handle_login():
         data = request.json
         email = data.get("email", None)
         password = data.get("password", None)
+        print(data)
+        return jsonify([]), 200
 
         if email is None or password is None:
-            return jsonify("You need an Email and a Password"), 400
+            return jsonify({"message": "You need an Email and a Password"}), 400
         else:
             user = User.query.filter_by(email=email).first()
             if user is None:

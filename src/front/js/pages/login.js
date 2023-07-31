@@ -14,8 +14,8 @@ export const Login = () => {
 
   function handleLogin() {
     let email = document.getElementById("emailInput").value;
-    let password = document.getElementById("inputPassword5");
-    actions.Login(email, password);
+    let password = document.getElementById("passwordInput").value;
+    actions.Login(email,password);
   }
 
   return (
@@ -38,13 +38,13 @@ export const Login = () => {
             />
           </div>
           <div className="row mb-3">
-            <label htmlFor="inputPassword5" className="form-label">
+            <label htmlFor="passwordInput" className="form-label">
               Password
             </label>
             <input
               type="password"
               required
-              id="inputPassword5"
+              id="passwordInput"
               className="form-control"
               aria-labelledby="passwordHelpBlock"
               value={login.password}

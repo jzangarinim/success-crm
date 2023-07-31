@@ -80,7 +80,10 @@ const getState = ({ getStore, getActions, setStore }) => {
         }
       },
 
-      Login: async (email, password) => {
+      Login: async (
+        email,
+        password 
+        ) => {
         try {
           let response = await fetch(`${process.env.BACKEND_URL}/api/login`, {
             method: "POST",
