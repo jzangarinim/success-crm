@@ -13,7 +13,9 @@ export const Login = () => {
   };
 
   function handleLogin() {
-    actions.Login();
+    let email = document.getElementById("emailInput").value;
+    let password = document.getElementById("inputPassword5");
+    actions.Login(email, password);
   }
 
   return (
@@ -36,7 +38,7 @@ export const Login = () => {
             />
           </div>
           <div className="row mb-3">
-            <label for="inputPassword5" className="form-label">
+            <label htmlFor="inputPassword5" className="form-label">
               Password
             </label>
             <input
@@ -56,16 +58,14 @@ export const Login = () => {
             </div>
           </div>
           <button
-              type="button"
-              className="col-2 btn btn-primary me-3"
-              onClick={handleLogin}
-            >
-              Login
+            type="button"
+            className="col-2 btn btn-primary me-3"
+            onClick={handleLogin}
+          >
+            Login
           </button>
         </div>
       </div>
     </>
   );
 };
-
-

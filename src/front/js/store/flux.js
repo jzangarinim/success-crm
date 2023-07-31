@@ -17,8 +17,7 @@ const getState = ({ getStore, getActions, setStore }) => {
       // },
     },
     actions: {
-
-      Project: async (        
+      Project: async (
         title,
         managerId,
         assistantId,
@@ -26,23 +25,26 @@ const getState = ({ getStore, getActions, setStore }) => {
         description,
         startDate,
         endDate
-        ) => {
+      ) => {
         const store = getStore();
         const actions = getActions();
         try {
-          let response = await fetch(`${process.env.BACKEND_URL}/api/projects`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              project_name: `${title}`,
-              account_manager_id: `${managerId}`,
-              assistant_id: `${assistantId}`,
-              customer_id: `${customerId}`,
-              description: `${description}`,
-              start_date: `${startDate}`,
-              end_date: `${endDate}`,
-            }),
-        });
+          let response = await fetch(
+            `${process.env.BACKEND_URL}/api/projects`,
+            {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                project_name: `${title}`,
+                account_manager_id: `${managerId}`,
+                assistant_id: `${assistantId}`,
+                customer_id: `${customerId}`,
+                description: `${description}`,
+                start_date: `${startDate}`,
+                end_date: `${endDate}`,
+              }),
+            }
+          );
           if (response.ok) {
             console.log(project);
             return true;
@@ -60,11 +62,9 @@ const getState = ({ getStore, getActions, setStore }) => {
         last_name,
         city,
         country
-        ) => {
-          try {
-          let response = await fetch(
-            `${process.env.BACKEND_URL}/api/users`,
-            {
+      ) => {
+        try {
+          let response = await fetch(`${process.env.BACKEND_URL}/api/users`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
@@ -76,8 +76,7 @@ const getState = ({ getStore, getActions, setStore }) => {
               city: `${city}`,
               country: `${country}`,
             }),
-          }
-          );
+          });
           if (response.ok) {
             return true;
           }
@@ -86,28 +85,21 @@ const getState = ({ getStore, getActions, setStore }) => {
         }
       },
 
-      Login: async (      
-        email,
-        password,
-        ) => {
-          try {
-            let response = await fetch(
-              `${process.env.BACKEND_URL}/api/login`, 
-              {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({
-                email: `${email}`,
-              }),
-              }
-            );
-            if (response.ok) {
-              return true;
-            }
-          } 
-          catch (err) {}
-        },
- 
+      Login: async (email, password) => {
+        try {
+          let response = await fetch(`${process.env.BACKEND_URL}/api/login`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              email: `${email}`,
+              password: `${password}`,
+            }),
+          });
+          if (response.ok) {
+            return true;
+          }
+        } catch (err) {}
+      },
 
       editProject: async (
         id,
