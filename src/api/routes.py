@@ -2,26 +2,22 @@ from flask import Flask, request, jsonify, url_for, Blueprint
 from api.models import db, User, Customer, Project
 from api.utils import generate_sitemap, APIException
 from werkzeug.security import generate_password_hash, check_password_hash
-from base64 import b64encode
-import os
 from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
 
 api = Blueprint('api', __name__)
 
 
-def set_password(password, salt):
-    return generate_password_hash(f"{password}{salt}")
+def set_password(password):
+    return generate_password_hash(f"{password}")
 
 
-def check_password(hash_password, password, salt):
-    return check_password_hash(hash_password, f"{password}{salt}")
+def check_password(hash_password, password):
+    return check_password_hash(hash_password, f"{password}")
 
 
 # /users endpoints
 
-
 @api.route('/users', methods=['GET'])
-@jwt_required()
 def get_users():
     users = User()
     users = users.query.all()
@@ -80,14 +76,6 @@ def get_department(department=None):
         return jsonify({"message": "bad request"}), 400
 
 
-def set_password(password, salt):
-    return generate_password_hash(f"{password}{salt}")
-
-
-def check_password(hash_password, password, salt):
-    return check_password_hash(hash_password, f"{password}{salt}")
-
-
 @api.route('/users', methods=['POST'])
 def add_user():
     if request.method == "POST":
@@ -113,19 +101,16 @@ def add_user():
             return jsonify({"message": "The user all ready exist"})
 
         if user is None:
-            salt = b64encode(os.urandom(32)).decode('utf-8')
-            password = set_password(password, salt)
-            salt = b64encode(os.urandom(32)).decode('utf-8')
-            password = set_password(password, salt)
-            user = User(email=data["email"], password=data["password"],
+            password = set_password(data.get("password"))
+            user = User(email=data["email"], password=password,
                         department=data["department"], name=data["name"],
                         last_name=data["last_name"], city=data["city"],
-                        country=data["country"], salt=salt)
+                        country=data["country"])
             db.session.add(user)
 
             try:
                 db.session.commit()
-                return jsonify(body), 201
+                return jsonify(user.serialize()), 201
 
             except Exception as error:
                 print(error)
@@ -138,7 +123,7 @@ def handle_login():
         body = request.json
         email = body.get("email", None)
         password = body.get("password", None)
-
+        
         if email is None or password is None:
             return jsonify("You need an Email and a Password"), 400
         else:
@@ -146,9 +131,9 @@ def handle_login():
             if user is None:
                 return jsonify({"message": "Bad credential"}), 400
             else:
-                if check_password(user.password, password, user.salt):
+                if check_password(user.password, password):
                     token = create_access_token(identity=user.id)
-                    return jsonify({"token": token}), 200
+                    return jsonify({"token": token, "role":user.role}), 200
                 else:
                     return jsonify({"message": "Bad Credential"}), 400
 
@@ -218,15 +203,11 @@ def get_one_customer(customer_id=None):
 def get_projects():
     projects = Project()
     projects = projects.query.all()
-    projects = list(map(lambda item: item.serialize(), projects))
-    return jsonify(projects)
-
     aux_projects = []
     for project in projects:
         aux_projects.append(project.serialize())
     for project in aux_projects:
-        manager = User.query.filter_by(
-            id=project["account_manager_id"]).first()
+        manager = User.query.filter_by(id=project["account_manager_id"]).first()
         assistant = User.query.filter_by(id=project["assistant_id"]).first()
         customer = User.query.filter_by(id=project["customer_id"]).first()
         project["account_manager_id"] = f"{manager.name} {manager.last_name}"
@@ -248,30 +229,6 @@ def get_one_project(project_id=None):
             return jsonify({"message": "project not found"}), 404
     else:
         return jsonify({"message": "bad request"}), 400
-
-
-def get_customer(id=None):
-    if id is not None:
-        customer = Customer()
-        customer = customer.query.get(id)
-
-        if customer is not None:
-            return jsonify(customer.company_name.serialize()), 200
-
-        else:
-            return jsonify({"message": "Customer not found"}), 404
-
-
-def get_assistant(id=None):
-    if id is not None:
-        assistant = User()
-        assistant = assistant.query.get(id)
-
-        if assistant is not None:
-            return jsonify(assistant.name.serialize(), assistant.last_name.serialize()), 200
-
-        else:
-            return jsonify({"message": "Assistant not found"}), 404
 
 
 @api.route('/projects/<int:project_id>', methods=['PUT'])

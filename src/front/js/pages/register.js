@@ -1,9 +1,10 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { Context } from "../store/appContext";
 import "../../styles/register.css";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
-export const Register = () => {
+export const Register_user = () => {
+  let navigate = useNavigate();
   const { actions, store } = useContext(Context);
   const [user, setUser] = useState({
     name: "",
@@ -14,18 +15,43 @@ export const Register = () => {
     city: "",
     country: "",
   });
+
   const handleChange = (event) => {
     setUser({ ...user, [event.target.name]: event.target.value });
   };
 
-  function handleRegister() {
-    actions.Register(user);
+  async function handleRegister() {
+    let name = document.getElementById("nameInput").value;
+    let lastName = document.getElementById("last_nameInput").value;
+    let email = document.getElementById("emailInput").value;
+    let department = document.getElementById("departmentSelect").value;
+    let city = document.getElementById("cityInput").value;
+    let country = document.getElementById("countryInput").value;
+    let password = document.getElementById("passwordInput").value;
+    let response = actions.Register(
+      email,
+      password,
+      department,
+      name,
+      lastName,
+      city,
+      country
+    );
+    if (response) {
+      navigate("/login");
+    }
   }
+
+  useEffect(() => {
+    if (store.token) {
+      navigate("/projects");
+    }
+  }, []);
 
   return (
     <>
       <div className="container">
-        <div className="col 12">
+        <div className="col 12 mt-3">
           <div className="row mb-3">
             <label htmlFor="nameInput" className="form-label">
               First Name
@@ -36,7 +62,7 @@ export const Register = () => {
               className="form-control"
               id="nameInput"
               placeholder="Your Name"
-              value={user.name}
+              defaultValue={user.name}
               name="name"
               onChange={handleChange}
             />
@@ -51,7 +77,7 @@ export const Register = () => {
               className="form-control"
               id="last_nameInput"
               placeholder="Your Last Name"
-              value={user.last_name}
+              defaultValue={user.last_name}
               name="last_name"
               onChange={handleChange}
             />
@@ -66,7 +92,7 @@ export const Register = () => {
               className="form-control"
               id="emailInput"
               placeholder="name@example.com"
-              value={user.email}
+              defaultValue={user.email}
               name="email"
               onChange={handleChange}
             />
@@ -75,38 +101,42 @@ export const Register = () => {
             <label htmlFor="departmentInput" className="form-label">
               Department
             </label>
-            <select className="form-select" aria-label="Default select example">
-              <option selected>Select your department</option>
+            <select
+              className="form-select"
+              aria-label="Default select example"
+              id="departmentSelect"
+            >
+              <option>Select your department</option>
               <option
-                value={user.department}
+                defaultValue="Human Resources"
                 name="department"
                 onChange={handleChange}
               >
                 Human Resources
               </option>
               <option
-                value={user.department}
+                defaultValue="Sales"
                 name="department"
                 onChange={handleChange}
               >
                 Sales
               </option>
               <option
-                value={user.department}
+                defaultValue="Finances"
                 name="department"
                 onChange={handleChange}
               >
                 Finances
               </option>
               <option
-                value={user.department}
+                defaultValue="Trial"
                 name="department"
                 onChange={handleChange}
               >
                 Trial
               </option>
               <option
-                value={user.department}
+                defaultValue="Recruitment"
                 name="department"
                 onChange={handleChange}
               >
@@ -124,7 +154,7 @@ export const Register = () => {
               className="form-control"
               id="cityInput"
               placeholder="Your City"
-              value={user.city}
+              defaultValue={user.city}
               name="city"
               onChange={handleChange}
             />
@@ -139,22 +169,22 @@ export const Register = () => {
               className="form-control"
               id="countryInput"
               placeholder="Your Country"
-              value={user.country}
+              defaultValue={user.country}
               name="country"
               onChange={handleChange}
             />
           </div>
           <div className="row mb-3">
-            <label for="inputPassword5" className="form-label">
+            <label htmlFor="passwordInput" className="form-label">
               Password
             </label>
             <input
               type="password"
               required
-              id="inputPassword5"
+              id="passwordInput"
               className="form-control"
               aria-labelledby="passwordHelpBlock"
-              value={user.password}
+              defaultValue={user.password}
               name="password"
               onChange={handleChange}
             />
