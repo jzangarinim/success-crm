@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { Context } from "../store/appContext";
 import "../../styles/register.css";
 import { Link, useNavigate } from "react-router-dom";
@@ -42,10 +42,16 @@ export const Register_user = () => {
     }
   }
 
+  useEffect(() => {
+    if (store.token) {
+      navigate("/projects");
+    }
+  }, []);
+
   return (
     <>
       <div className="container">
-        <div className="col 12">
+        <div className="col 12 mt-3">
           <div className="row mb-3">
             <label htmlFor="nameInput" className="form-label">
               First Name

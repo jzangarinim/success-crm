@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { Context } from "../store/appContext";
 import { Link } from "react-router-dom";
@@ -23,10 +23,16 @@ export const Login = () => {
     }
   }
 
+  useEffect(() => {
+    if (store.token) {
+      navigate("/projects");
+    }
+  }, []);
+
   return (
     <>
       <div className="container">
-        <div className="col 12">
+        <div className="col 12 mt-3">
           <div className="row mb-3">
             <label htmlFor="emailInput" className="form-label">
               Email address
