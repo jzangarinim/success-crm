@@ -1,8 +1,6 @@
 import React, { useState, useEffect, useContext } from "react";
-import { useNavigate } from "react-router-dom";
-import { useParams } from "react-router-dom";
 import { Context } from "../store/appContext";
-import { Link } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import profilePicture from "../../img/Default_pfp.jpg";
 
 export const ViewEmployee = () => {
@@ -10,7 +8,7 @@ export const ViewEmployee = () => {
   const [employee, setEmployee] = useState({});
   const [projects, setProjects] = useState([]);
   const { store } = useContext(Context);
-  const { user } = store;
+  const { token } = store;
   let { id } = useParams();
 
   function handleProjectClick(id) {
@@ -18,26 +16,30 @@ export const ViewEmployee = () => {
   }
 
   useEffect(() => {
-    async function getEmployee() {
-      try {
-        let response = await fetch(
-          `${process.env.BACKEND_URL}/api/users/${id}`
-        );
-        let data = await response.json();
-        setEmployee(data);
-      } catch (error) {}
+    if (token) {
+      async function getEmployee() {
+        try {
+          let response = await fetch(
+            `${process.env.BACKEND_URL}/api/users/${id}`
+          );
+          let data = await response.json();
+          setEmployee(data);
+        } catch (error) {}
+      }
+      async function getProjects() {
+        try {
+          let response = await fetch(
+            `${process.env.BACKEND_URL}/api/users/${id}/projects`
+          );
+          let data = await response.json();
+          setProjects(data);
+        } catch (error) {}
+      }
+      getEmployee();
+      getProjects();
+    } else {
+      navigate("/");
     }
-    async function getProjects() {
-      try {
-        let response = await fetch(
-          `${process.env.BACKEND_URL}/api/users/${id}/projects`
-        );
-        let data = await response.json();
-        setProjects(data);
-      } catch (error) {}
-    }
-    getEmployee();
-    getProjects();
   }, []);
   return (
     <>

@@ -1,9 +1,10 @@
 import React, { useState, useContext } from "react";
 import { Context } from "../store/appContext";
 import "../../styles/register.css";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 export const Register_user = () => {
+  let navigate = useNavigate();
   const { actions, store } = useContext(Context);
   const [user, setUser] = useState({
     name: "",
@@ -19,7 +20,7 @@ export const Register_user = () => {
     setUser({ ...user, [event.target.name]: event.target.value });
   };
 
-  function handleRegister() {
+  async function handleRegister() {
     let name = document.getElementById("nameInput").value;
     let lastName = document.getElementById("last_nameInput").value;
     let email = document.getElementById("emailInput").value;
@@ -27,7 +28,7 @@ export const Register_user = () => {
     let city = document.getElementById("cityInput").value;
     let country = document.getElementById("countryInput").value;
     let password = document.getElementById("passwordInput").value;
-    actions.Register(
+    let response = actions.Register(
       email,
       password,
       department,
@@ -36,6 +37,9 @@ export const Register_user = () => {
       city,
       country
     );
+    if (response) {
+      navigate("/login");
+    }
   }
 
   return (

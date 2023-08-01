@@ -1,23 +1,34 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
+import { Context } from "../store/appContext";
+import { useNavigate } from "react-router-dom";
 import profilePicture from "../../img/Default_pfp.jpg";
 
 export const Customers = () => {
   const [customers, setCustomers] = useState([]);
   const [original, setOriginal] = useState();
+  const { store } = useContext(Context);
+  const { token } = store;
+  let navigate = useNavigate();
 
   useEffect(() => {
-    const getCustomers = async () => {
-      try {
-        let response = await fetch(`${process.env.BACKEND_URL}/api/customers`);
-        let data = await response.json();
-        const aux = [...data].sort((a, b) => (a.id > b.id ? 1 : -1));
-        setCustomers(aux);
-        setOriginal(aux);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    getCustomers();
+    if (token) {
+      const getCustomers = async () => {
+        try {
+          let response = await fetch(
+            `${process.env.BACKEND_URL}/api/customers`
+          );
+          let data = await response.json();
+          const aux = [...data].sort((a, b) => (a.id > b.id ? 1 : -1));
+          setCustomers(aux);
+          setOriginal(aux);
+        } catch (error) {
+          console.log(error);
+        }
+      };
+      getCustomers();
+    } else {
+      navigate("/");
+    }
   }, []);
 
   return (

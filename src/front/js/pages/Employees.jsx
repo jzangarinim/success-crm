@@ -1,10 +1,14 @@
-import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import React, { useState, useEffect, useContext } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { Context } from "../store/appContext";
 import profilePicture from "../../img/Default_pfp.jpg";
 
 export const Employees = () => {
+  let navigate = useNavigate();
   const [employees, setEmployees] = useState([]);
   const [original, setOriginal] = useState([]);
+  const { store } = useContext(Context);
+  const { token } = store;
 
   function handleFilter(event, str) {
     if (event.target.id === `${str}-button`) {
@@ -21,33 +25,37 @@ export const Employees = () => {
 
   useEffect(() => {
     // Gets all employees
-    const getEmployees = async () => {
-      try {
-        let response = await fetch(`${process.env.BACKEND_URL}/api/users`);
-        let data = await response.json();
-        // Sorts employees by department role (Admin > Head > Manager > VA > Member)
-        let aux = data.sort(function (a, b) {
-          const roleA = a.role;
-          const roleB = b.role;
-          const sortedRoles = [
-            "Admin",
-            "Head of Department",
-            "Account Manager",
-            "Virtual Assistant",
-            "Department member",
-          ];
-          const indexA = sortedRoles.indexOf(roleA);
-          const indexB = sortedRoles.indexOf(roleB);
-          return indexA - indexB;
-        });
-        //const aux = [...data].sort((a, b) => (a.role > b.role ? -1 : 1));
-        setEmployees(aux);
-        setOriginal(aux);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    getEmployees();
+    if (token) {
+      const getEmployees = async () => {
+        try {
+          let response = await fetch(`${process.env.BACKEND_URL}/api/users`);
+          let data = await response.json();
+          // Sorts employees by department role (Admin > Head > Manager > VA > Member)
+          let aux = data.sort(function (a, b) {
+            const roleA = a.role;
+            const roleB = b.role;
+            const sortedRoles = [
+              "Admin",
+              "Head of Department",
+              "Account Manager",
+              "Virtual Assistant",
+              "Department member",
+            ];
+            const indexA = sortedRoles.indexOf(roleA);
+            const indexB = sortedRoles.indexOf(roleB);
+            return indexA - indexB;
+          });
+          //const aux = [...data].sort((a, b) => (a.role > b.role ? -1 : 1));
+          setEmployees(aux);
+          setOriginal(aux);
+        } catch (error) {
+          console.log(error);
+        }
+      };
+      getEmployees();
+    } else {
+      navigate("/");
+    }
   }, []);
 
   return (

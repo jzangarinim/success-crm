@@ -29,7 +29,12 @@ export const Create_project = () => {
   return (
     <>
       <div className="container">
-        <div className="mt-3 mb-3">
+        <div className="row col-1 mb-3 mt-3">
+          <Link type="button" className="btn btn-success p-0" to="/projects">
+            <i className="fa-solid fa-arrow-left"></i>
+          </Link>
+        </div>
+        <div className="mb-3">
           <label htmlFor="project_nameInput" className="form-label">
             Project Name
           </label>

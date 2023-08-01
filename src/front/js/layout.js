@@ -11,8 +11,7 @@ import { Employees } from "./pages/Employees.jsx";
 import { ViewEmployee } from "./pages/ViewEmployee.jsx";
 import { Customers } from "./pages/Customers.jsx";
 import injectContext from "./store/appContext.js";
-import  { Login }   from "./pages/login.js";
-
+import { Login } from "./pages/login.js";
 
 import { Navbar } from "./component/navbar";
 import { Footer } from "./component/footer";
@@ -21,9 +20,7 @@ import { ProjectList } from "./component/projectCard.jsx";
 import { Create_project } from "./pages/createProject";
 // import { Dashboard } from "./pages/dashboard";
 
-
 const Layout = () => {
-  
   const basename = process.env.BASENAME || "";
   if (!process.env.BACKEND_URL || process.env.BACKEND_URL == "")
     return <BackendURL />;
@@ -35,12 +32,12 @@ const Layout = () => {
           <Navbar />
           <Routes>
             <Route element={<Home />} path="/" />
-            <Route element={<Login/>} path="/login" />
+            <Route element={<Login />} path="/login" />
             <Route element={<Register_user />} path="/register" />
             <Route element={<Projects />} path="/projects" />
             {/* <Route element={<Dashboard />} path="/dashb" /> */}
             <Route element={<Create_project />} path="/projects/create" />
-            <Route element={<ProjectList />} path="/projects/:project_id" />
+            {/* <Route element={<ProjectList />} path="/projects/:project_id" /> */}
             <Route
               element={<EditProject />}
               path="/projects/edit/:project_id"

@@ -101,7 +101,6 @@ const getState = ({ getStore, getActions, setStore }) => {
             });
             localStorage.setItem("token", data.token);
             localStorage.setItem("role", data.role);
-            console.log(store.user.role);
             return true;
           }
         } catch (err) {}
