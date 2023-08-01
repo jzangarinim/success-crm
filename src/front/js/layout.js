@@ -15,7 +15,7 @@ import { Login } from "./pages/login.js";
 import { Navbar } from "./component/navbar";
 import { Footer } from "./component/footer";
 
-// import { ProjectList } from "./component/projectList.jsx";
+import { ProjectList } from "./component/projectList.jsx";
 import { Create_project } from "./pages/createProject";
 import { Dashboard } from "./pages/dashboard.js";
 
@@ -36,14 +36,13 @@ const Layout = () => {
             <Route element={<Projects />} path="/projects" />
             <Route element={<Dashboard />} path="/dashboard" />
             <Route element={<Create_project />} path="/projects/create" />
-            {/* <Route element={<ProjectList />} path="/projects/:project_id" /> */}
             <Route
               element={<EditProject />}
               path="/projects/edit/:project_id"
             />
             <Route element={<Employees />} path="/employees" />
             <Route element={<ViewEmployee />} path="/employees/:id" />
-            {/* <Route element={<ProjectList />} path="/projects/:id" /> */}
+            <Route element={<ProjectList />} path="/projects/:id" />
             <Route element={<Customers />} path="/customers" />
             <Route element={<h1>Not found!</h1>} />
           </Routes>
