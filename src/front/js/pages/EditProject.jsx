@@ -61,7 +61,7 @@ export const EditProject = () => {
       navigate("/");
     }
   }, []);
-
+  console.log(project);
   return (
     <>
       {data && (

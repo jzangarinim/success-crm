@@ -1,10 +1,11 @@
 import React, { useState, useContext } from "react";
 import { Context } from "../store/appContext";
 import { EmployeeList } from "../component/EmployeeList.jsx";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 export const Create_project = () => {
   const { actions, store } = useContext(Context);
+  let navigate = useNavigate();
   const [project, setProject] = useState({
     project_name: "",
     account_manager_id: "",
@@ -23,7 +24,16 @@ export const Create_project = () => {
     let assistantId = document.getElementById("selectVirtual").value;
     let customerId = document.getElementById("customer_idInput").value;
     let description = document.getElementById("descriptionInput").value;
-    actions.Project(title, managerId, assistantId, customerId, description);
+    let response = actions.Project(
+      title,
+      managerId,
+      assistantId,
+      customerId,
+      description
+    );
+    if (response) {
+      navigate("/projects");
+    }
   }
 
   return (

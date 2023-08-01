@@ -15,7 +15,7 @@ import { Login } from "./pages/login.js";
 import { Navbar } from "./component/navbar";
 import { Footer } from "./component/footer";
 
-import { ProjectList } from "./component/projectList.jsx";
+import { ProjectList } from "./pages/projectList.jsx";
 import { Create_project } from "./pages/createProject";
 import { Dashboard } from "./pages/dashboard.js";
 

@@ -47,7 +47,12 @@ export const Projects = () => {
   return (
     <>
       <div className="container">
-        <div className="row mt-3 d-flex justify-content-center">
+        <div className="row col-1 mt-3">
+          <Link type="button" className="btn btn-success p-0" to="/dashboard">
+            <i className="fa-solid fa-arrow-left"></i>
+          </Link>
+        </div>
+        <div className="row d-flex justify-content-center">
           <div className="p-0 d-flex justify-content-between align-items-center">
             <h1 className="text-success">Projects</h1>
             <Link
