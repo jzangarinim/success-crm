@@ -88,6 +88,7 @@ class Project(db.Model):
             "start_date": self.start_date,
             "end_date": self.end_date,
 
+            "end_date": self.end_date
         }
 
 

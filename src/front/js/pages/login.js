@@ -19,13 +19,17 @@ export const Login = () => {
     let password = document.getElementById("passwordInput").value;
     let response = await actions.Login(email, password);
     if (response) {
+
       navigate("/dashboard");
+
     }
   }
 
   useEffect(() => {
     if (store.token) {
+
       navigate("/dashboard");
+
     }
   }, []);
 
