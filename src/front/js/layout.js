@@ -18,7 +18,7 @@ import { Footer } from "./component/footer";
 
 import { ProjectList } from "./component/projectCard.jsx";
 import { Create_project } from "./pages/createProject";
-// import { Dashboard } from "./pages/dashboard";
+import { Dashboard } from "./pages/dashboard.js";
 
 const Layout = () => {
   const basename = process.env.BASENAME || "";
@@ -35,7 +35,7 @@ const Layout = () => {
             <Route element={<Login />} path="/login" />
             <Route element={<Register_user />} path="/register" />
             <Route element={<Projects />} path="/projects" />
-            {/* <Route element={<Dashboard />} path="/dashb" /> */}
+            <Route element={<Dashboard />} path="/dashboard" />
             <Route element={<Create_project />} path="/projects/create" />
             {/* <Route element={<ProjectList />} path="/projects/:project_id" /> */}
             <Route
