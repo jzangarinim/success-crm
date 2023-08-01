@@ -5,6 +5,8 @@ import { Context } from "../store/appContext";
 
 export const Dashboard = () => {
     let navigate = useNavigate();
+    const { store } = useContext(Context);
+    const { user, token } = store;
     
     useEffect(() => {
         if (token) {

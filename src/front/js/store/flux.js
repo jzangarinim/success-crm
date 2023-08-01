@@ -10,13 +10,7 @@ const getState = ({ getStore, getActions, setStore }) => {
         role: localStorage.getItem("role") || null,
       },
       token: localStorage.getItem("token") || null,
-      // project: {
-      //   project_name: "",
-      //   account_manager_id: "",
-      //   assistant_id: "",
-      //   customer_id: "",
-      //   description: "",
-      // },
+
     },
     actions: {
       Project: async (

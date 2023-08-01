@@ -222,14 +222,18 @@ def get_one_project(project_id=None):
     if project_id is not None:
         project = Project()
         project = project.query.get(project_id)
+        aux_project = []
+        aux_project.append(project.serialize())
 
-        if project is not None:
-            return jsonify(project.serialize()), 200
+        manager = User.query.filter_by(
+            id=project["account_manager_id"]).first()
+        assistant = User.query.filter_by(id=project["assistant_id"]).first()
+        customer = User.query.filter_by(id=project["customer_id"]).first()
+        project["account_manager_id"] = f"{manager.name} {manager.last_name}"
+        project["assistant_id"] = f"{assistant.name} {assistant.last_name}"
+        project["customer_id"] = f"{customer.name} {customer.last_name}"
 
-        else:
-            return jsonify({"message": "project not found"}), 404
-    else:
-        return jsonify({"message": "bad request"}), 400
+    return jsonify(aux_project), 200
 
 
 @api.route('/projects/<int:project_id>', methods=['PUT'])
