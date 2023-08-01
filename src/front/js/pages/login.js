@@ -1,8 +1,10 @@
 import React, { useState, useContext } from "react";
+import { useNavigate } from "react-router-dom";
 import { Context } from "../store/appContext";
 import { Link } from "react-router-dom";
 
 export const Login = () => {
+  let navigate = useNavigate();
   const { actions, store } = useContext(Context);
   const [login, setLogin] = useState({
     email: "",
@@ -12,10 +14,13 @@ export const Login = () => {
     setLogin({ ...login, [event.target.name]: event.target.value });
   };
 
-  function handleLogin() {
+  async function handleLogin() {
     let email = document.getElementById("emailInput").value;
     let password = document.getElementById("passwordInput").value;
-    actions.Login(email,password);
+    let response = await actions.Login(email, password);
+    if (response) {
+      navigate("/projects");
+    }
   }
 
   return (

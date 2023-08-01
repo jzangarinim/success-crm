@@ -1,9 +1,18 @@
 from flask import Flask, request, jsonify, url_for, Blueprint
 from api.models import db, User, Customer, Project
 from api.utils import generate_sitemap, APIException
-
+from werkzeug.security import generate_password_hash, check_password_hash
+from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
 
 api = Blueprint('api', __name__)
+
+
+def set_password(password):
+    return generate_password_hash(f"{password}")
+
+
+def check_password(hash_password, password):
+    return check_password_hash(hash_password, f"{password}")
 
 
 # /users endpoints
@@ -71,6 +80,7 @@ def get_department(department=None):
 def add_user():
     if request.method == "POST":
         data = request.json
+
         if data.get("email") is None:
             return jsonify({"message": "Wrong property"}), 400
         if data.get("password") is None:
@@ -86,13 +96,13 @@ def add_user():
         if data.get("country") is None:
             return jsonify({"message": "Wrong property"}), 400
 
-        user = User()
-        user_email = user.query.filter_by(email=data.get("email")).first()
-        if user_email is not None:
+        user = User.query.filter_by(email=data.get("email")).first()
+        if user is not None:
             return jsonify({"message": "The user all ready exist"})
 
-        if user_email is None:
-            user = User(email=data["email"], password=data["password"],
+        if user is None:
+            password = set_password(data.get("password"))
+            user = User(email=data["email"], password=password,
                         department=data["department"], name=data["name"],
                         last_name=data["last_name"], city=data["city"],
                         country=data["country"])
@@ -100,7 +110,7 @@ def add_user():
 
             try:
                 db.session.commit()
-                return jsonify(data), 201
+                return jsonify(user.serialize()), 201
 
             except Exception as error:
                 print(error)
@@ -110,18 +120,22 @@ def add_user():
 @api.route('/login', methods=['POST'])
 def handle_login():
     if request.method == "POST":
-        data = request.json
-        email = data.get("email", None)
-        password = data.get("password", None)
-        print(data)
-        return jsonify([]), 200
-
+        body = request.json
+        email = body.get("email", None)
+        password = body.get("password", None)
+        
         if email is None or password is None:
-            return jsonify({"message": "You need an Email and a Password"}), 400
+            return jsonify("You need an Email and a Password"), 400
         else:
-            user = User.query.filter_by(email=email).first()
+            user = User.query.filter_by(email=email).one_or_none()
             if user is None:
                 return jsonify({"message": "Bad credential"}), 400
+            else:
+                if check_password(user.password, password):
+                    token = create_access_token(identity=user.id)
+                    return jsonify({"token": token, "role":user.role}), 200
+                else:
+                    return jsonify({"message": "Bad Credential"}), 400
 
 
 # /customers endpoints

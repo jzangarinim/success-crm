@@ -7,7 +7,9 @@ const getState = ({ getStore, getActions, setStore }) => {
         last_name: "Snow",
         city: "Caracas",
         country: "Venezuela",
+        role: localStorage.getItem("role") || null,
       },
+      token: localStorage.getItem("token") || null,
       // project: {
       //   project_name: "",
       //   account_manager_id: "",
@@ -80,10 +82,8 @@ const getState = ({ getStore, getActions, setStore }) => {
         }
       },
 
-      Login: async (
-        email,
-        password 
-        ) => {
+      Login: async (email, password) => {
+        const store = getStore();
         try {
           let response = await fetch(`${process.env.BACKEND_URL}/api/login`, {
             method: "POST",
@@ -93,7 +93,15 @@ const getState = ({ getStore, getActions, setStore }) => {
               password: `${password}`,
             }),
           });
+          let data = await response.json();
           if (response.ok) {
+            setStore({
+              token: data.token,
+              user: { ...store.user, role: data.role },
+            });
+            localStorage.setItem("token", data.token);
+            localStorage.setItem("role", data.role);
+            console.log(store.user.role);
             return true;
           }
         } catch (err) {}
