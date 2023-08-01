@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
-import { useNavigate } from "react-router-dom";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Context } from "../store/appContext";
 import "../../styles/projects.css";
 
@@ -8,7 +7,7 @@ export const Projects = () => {
   let navigate = useNavigate();
   const [data, setData] = useState([]);
   const { store } = useContext(Context);
-  const { user } = store;
+  const { user, token } = store;
 
   function handleProjectClick(id) {
     navigate(`/projects/${id}`);
@@ -25,20 +24,24 @@ export const Projects = () => {
   }
 
   useEffect(() => {
-    const getProjects = async () => {
-      try {
-        let response = await fetch(`${process.env.BACKEND_URL}/api/projects`);
-        let data = await response.json();
-        // Sorts projects by id
-        const aux = [...data].sort((a, b) =>
-          a.project_id > b.project_id ? 1 : -1
-        );
-        setData(aux);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    getProjects();
+    if (token) {
+      const getProjects = async () => {
+        try {
+          let response = await fetch(`${process.env.BACKEND_URL}/api/projects`);
+          let data = await response.json();
+          // Sorts projects by id
+          const aux = [...data].sort((a, b) =>
+            a.project_id > b.project_id ? 1 : -1
+          );
+          setData(aux);
+        } catch (error) {
+          console.log(error);
+        }
+      };
+      getProjects();
+    } else {
+      navigate("/");
+    }
   }, []);
 
   return (
