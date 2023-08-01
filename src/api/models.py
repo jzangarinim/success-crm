@@ -73,15 +73,6 @@ class Project(db.Model):
         db.Integer, db.ForeignKey('user.id'), nullable=False)
     customer_id = db.Column(db.Integer, db.ForeignKey(
         'customer.id'), nullable=False)
-    account_manager_id = db.Column(
-        db.Integer, db.ForeignKey('user.id'), nullable=False)
-    assistant_id = db.Column(
-        db.Integer, db.ForeignKey('user.id'), nullable=False)
-    customer_id = db.Column(db.Integer, db.ForeignKey(
-        'customer.id'), nullable=False)
-    description = db.Column(db.Text, nullable=True)
-    start_date = db.Column(db.DateTime, default=datetime.utcnow)
-    end_date = db.Column(db.DateTime, nullable=True)
 
     def __repr__(self):
         return f'<Project {self.project_name}>'
@@ -95,10 +86,7 @@ class Project(db.Model):
             "customer_id": self.customer_id,
             "description": self.description,
             "start_date": self.start_date,
-            "end_date": self.end_date,
-            "company_name": self.customer.company_name,
-            "assistant_name": self.user.user_name,
-            "account_manager_name": self.user.user_name
+            "end_date": self.end_date
         }
 
 

@@ -2,43 +2,48 @@ const getState = ({ getStore, getActions, setStore }) => {
   return {
     store: {
       user: {
-        name: "jose",
-        last_name: "zangarini",
-        role: "Admin",
+        email: "default@example.com",
+        name: "Jhon",
+        last_name: "Snow",
+        city: "Caracas",
+        country: "Venezuela",
+        role: localStorage.getItem("role") || null,
       },
-      users: [],
-      id: "",
-      project: {
-        project_name: "",
-        account_manager_id: "",
-        assistant_id: "",
-        customer_id: "",
-        description: "",
-      },
+      token: localStorage.getItem("token") || null,
+      // project: {
+      //   project_name: "",
+      //   account_manager_id: "",
+      //   assistant_id: "",
+      //   customer_id: "",
+      //   description: "",
+      // },
     },
     actions: {
-      Project: async (project) => {
+      Project: async (
+        title,
+        managerId,
+        assistantId,
+        customerId,
+        description
+      ) => {
         const store = getStore();
         const actions = getActions();
         try {
-          let response = await fetch(`${process.env.BACKEND_URL}/api/projects`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(project),
-        });
-        if (response.ok) {
-          console.log(project)
-          return true
           let response = await fetch(
-            `${process.env.BACKEND_URL}/api/regproject`,
+            `${process.env.BACKEND_URL}/api/projects`,
             {
               method: "POST",
               headers: { "Content-Type": "application/json" },
-              body: JSON.stringify(project),
+              body: JSON.stringify({
+                project_name: `${title}`,
+                account_manager_id: `${managerId}`,
+                assistant_id: `${assistantId}`,
+                customer_id: `${customerId}`,
+                description: `${description}`,
+              }),
             }
           );
           if (response.ok) {
-            console.log(project);
             return true;
           }
         } catch (err) {
@@ -46,17 +51,30 @@ const getState = ({ getStore, getActions, setStore }) => {
         }
       },
 
-      Register: async (user) => {
-        const store = getStore();
-        const actions = getActions();
+      Register: async (
+        email,
+        password,
+        department,
+        name,
+        last_name,
+        city,
+        country
+      ) => {
         try {
           let response = await fetch(`${process.env.BACKEND_URL}/api/users`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(user),
+            body: JSON.stringify({
+              email: `${email}`,
+              password: `${password}`,
+              department: `${department}`,
+              name: `${name}`,
+              last_name: `${last_name}`,
+              city: `${city}`,
+              country: `${country}`,
+            }),
           });
           if (response.ok) {
-            console.log(user);
             return true;
           }
         } catch (err) {
@@ -64,24 +82,30 @@ const getState = ({ getStore, getActions, setStore }) => {
         }
       },
 
-      Login: async (user) => {
+      Login: async (email, password) => {
         const store = getStore();
-        const actions = getActions();
         try {
           let response = await fetch(`${process.env.BACKEND_URL}/api/login`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(user),
+            body: JSON.stringify({
+              email: `${email}`,
+              password: `${password}`,
+            }),
           });
+          let data = await response.json();
           if (response.ok) {
-            console.log(user);
+            setStore({
+              token: data.token,
+              user: { ...store.user, role: data.role },
+            });
+            localStorage.setItem("token", data.token);
+            localStorage.setItem("role", data.role);
+            console.log(store.user.role);
             return true;
           }
-        } catch (err) {
-          console.log(err);
-        }
+        } catch (err) {}
       },
-
 
       editProject: async (
         id,
