@@ -225,8 +225,10 @@ def get_one_project(project_id=None):
         aux_project = []
         aux_project.append(project.serialize())
         for project in aux_project:
-            manager = User.query.filter_by(id=project["account_manager_id"]).first()
-            assistant = User.query.filter_by(id=project["assistant_id"]).first()
+            manager = User.query.filter_by(
+                id=project["account_manager_id"]).first()
+            assistant = User.query.filter_by(
+                id=project["assistant_id"]).first()
             customer = User.query.filter_by(id=project["customer_id"]).first()
             project["account_manager_id"] = f"{manager.name} {manager.last_name}"
             project["assistant_id"] = f"{assistant.name} {assistant.last_name}"
@@ -248,6 +250,10 @@ def edit_project(project_id=None):
         project.customer_id = data["customer_id"]
     if data.get("description") is not None:
         project.description = data["description"]
+    if data.get("start_date") is not None:
+        project.start_date = data["start_date"]
+    if data.get("end_date") is not None:
+        project.end_date = data["end_date"]
 
         try:
             db.session.commit()
