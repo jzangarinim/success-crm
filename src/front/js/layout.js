@@ -36,7 +36,6 @@ const Layout = () => {
             <Route element={<Projects />} path="/projects" />
             <Route element={<Dashboard />} path="/dashboard" />
             <Route element={<Create_project />} path="/projects/create" />
-            {/* <Route element={<ProjectList />} path="/projects/:project_id" /> */}
             <Route
               element={<EditProject />}
               path="/projects/edit/:project_id"
