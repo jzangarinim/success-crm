@@ -123,7 +123,7 @@ def handle_login():
         body = request.json
         email = body.get("email", None)
         password = body.get("password", None)
-        
+
         if email is None or password is None:
             return jsonify("You need an Email and a Password"), 400
         else:
@@ -133,7 +133,7 @@ def handle_login():
             else:
                 if check_password(user.password, password):
                     token = create_access_token(identity=user.id)
-                    return jsonify({"token": token, "role":user.role}), 200
+                    return jsonify({"token": token, "role": user.role}), 200
                 else:
                     return jsonify({"message": "Bad Credential"}), 400
 
@@ -207,7 +207,8 @@ def get_projects():
     for project in projects:
         aux_projects.append(project.serialize())
     for project in aux_projects:
-        manager = User.query.filter_by(id=project["account_manager_id"]).first()
+        manager = User.query.filter_by(
+            id=project["account_manager_id"]).first()
         assistant = User.query.filter_by(id=project["assistant_id"]).first()
         customer = User.query.filter_by(id=project["customer_id"]).first()
         project["account_manager_id"] = f"{manager.name} {manager.last_name}"
