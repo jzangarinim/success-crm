@@ -2,6 +2,7 @@ import React, { useState, useEffect, useContext } from "react";
 import { useParams } from "react-router-dom";
 import { Context } from "../store/appContext.js";
 import { Link, useNavigate } from "react-router-dom";
+import { BackButton } from "../component/BackButton.jsx";
 
 export const One_project = () => {
   let navigate = useNavigate();
@@ -9,10 +10,6 @@ export const One_project = () => {
   const { store } = useContext(Context);
   const { token } = store;
   let { project_id } = useParams();
-
-  function handleProject(project_id) {
-    navigate(`/projects/${project_id}`);
-  }
 
   useEffect(() => {
     if (token) {
@@ -37,11 +34,7 @@ export const One_project = () => {
   return (
     <>
       <div className="Container justify-content-center">
-        <div className="row col-1 m-3">
-          <Link to={`/projects/`} type="button" className="btn btn-success p-0">
-            <i className="fa-solid fa-arrow-left"></i>
-          </Link>
-        </div>
+        <BackButton />
         <div className="col 12 ">
           <div className="card m-4">
             <h5 className="card-header">

@@ -2,6 +2,7 @@ import React, { useState, useEffect, useContext } from "react";
 import { Link, useNavigate, useParams, useLocation } from "react-router-dom";
 import { Context } from "../store/appContext";
 import { EmployeeList } from "../component/EmployeeList.jsx";
+import { BackButton } from "../component/BackButton.jsx";
 
 export const EditProject = () => {
   const { store, actions } = useContext(Context);
@@ -61,16 +62,12 @@ export const EditProject = () => {
       navigate("/");
     }
   }, []);
-  console.log(project);
+
   return (
     <>
       {data && (
         <div className="container-fluid col-9 mt-3">
-          <div className="row col-1 mb-3">
-            <Link type="button" className="btn btn-success p-0" to="/projects">
-              <i className="fa-solid fa-arrow-left"></i>
-            </Link>
-          </div>
+          <BackButton />
           <div className="row">
             <div className="card mb-3 p-0 border border-warning">
               <div className="row g-0">

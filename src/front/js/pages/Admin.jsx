@@ -1,10 +1,9 @@
 import React, { useState, useEffect, useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Context } from "../store/appContext";
-import "../../styles/projects.css";
 import { BackButton } from "../component/BackButton.jsx";
 
-export const Projects = () => {
+export const Admin = () => {
   let navigate = useNavigate();
   const [data, setData] = useState([]);
   const [clicked, setClicked] = useState("");
@@ -12,35 +11,42 @@ export const Projects = () => {
   const { deleteProject } = actions;
   const { user, token } = store;
 
-  function handleProjectClick(id) {
-    navigate(`/projects/${id}`);
+  function formatDate(date) {
+    const dt = new Date(date);
+    return dt.toDateString();
   }
-  async function handleDelete() {
-    if (user.role === "Admin") {
-      let response = deleteProject(clicked);
-      if (response) {
-        setClicked("");
-        window.location.reload();
-      }
-    }
+  function handleEmployeeClick(id) {
+    navigate(`/employees/${id}`);
   }
 
   useEffect(() => {
-    if (token) {
-      const getProjects = async () => {
+    if (token && user.role === "Admin") {
+      const getEmployees = async () => {
         try {
-          let response = await fetch(`${process.env.BACKEND_URL}/api/projects`);
+          let response = await fetch(`${process.env.BACKEND_URL}/api/users`);
           let data = await response.json();
-          // Sorts projects by id
-          const aux = [...data].sort((a, b) =>
-            a.project_id > b.project_id ? 1 : -1
-          );
+          // Sorts employees by department role (Admin > Head > Manager > VA > Member)
+          let aux = data.sort(function (a, b) {
+            const roleA = a.role;
+            const roleB = b.role;
+            const sortedRoles = [
+              "Admin",
+              "Head of Department",
+              "Account Manager",
+              "Virtual Assistant",
+              "Department member",
+            ];
+            const indexA = sortedRoles.indexOf(roleA);
+            const indexB = sortedRoles.indexOf(roleB);
+            return indexA - indexB;
+          });
+          //const aux = [...data].sort((a, b) => (a.role > b.role ? -1 : 1));
           setData(aux);
         } catch (error) {
           console.log(error);
         }
       };
-      getProjects();
+      getEmployees();
     } else {
       navigate("/");
     }
@@ -52,7 +58,7 @@ export const Projects = () => {
         <BackButton />
         <div className="row d-flex justify-content-center">
           <div className="p-0 d-flex justify-content-between align-items-center">
-            <h1 className="text-success">Projects</h1>
+            <h1 className="text-success">Employees</h1>
             <Link
               to="/projects/create"
               type="button"
@@ -60,7 +66,7 @@ export const Projects = () => {
                 user.role != "Admin" ? "d-none" : ""
               }`}
             >
-              Add a project
+              Add a new employee
             </Link>
           </div>
           <table className="table table-sm table-striped table-success table-hover table-bordered align-middle">
@@ -73,10 +79,10 @@ export const Projects = () => {
                 >
                   #
                 </th>
-                <th scope="col">Project Name</th>
-                <th scope="col">Project Manager</th>
-                <th scope="col">Assigned VA</th>
-                <th scope="col">Customer</th>
+                <th scope="col">Name</th>
+                <th scope="col">Department</th>
+                <th scope="col">Role</th>
+                <th scope="col">Date of hire</th>
                 <th
                   scope="col"
                   style={{ width: 80 + "px" }}
@@ -85,21 +91,21 @@ export const Projects = () => {
               </tr>
             </thead>
             <tbody>
-              {data.map((project, index) => {
+              {data.map((emp, index) => {
                 return (
-                  <tr key={index}>
+                  <tr key={emp.id}>
                     <th scope="row" className="text-center">
-                      {project.project_id}
+                      {emp?.id}
                     </th>
                     <td
                       className="project-name"
-                      onClick={() => handleProjectClick(project.project_id)}
+                      onClick={() => handleEmployeeClick(emp?.id)}
                     >
-                      {project.project_name}
+                      {emp?.name} {emp?.last_name}
                     </td>
-                    <td>{project.account_manager_id}</td>
-                    <td>{project.assistant_id}</td>
-                    <td>{project.customer_id}</td>
+                    <td>{emp?.department}</td>
+                    <td>{emp?.role}</td>
+                    <td>{formatDate(emp?.created_at)}</td>
                     <td
                       className={`d-flex justify-content-center ${
                         user.role != "Admin" ? "d-none" : ""
@@ -107,11 +113,11 @@ export const Projects = () => {
                     >
                       {/* Edit button */}
                       <Link
-                        to={`/projects/edit/${project.project_id}`}
-                        state={{ data: project }}
+                        to={`/admin/edit/${emp?.id}`}
+                        state={{ data: emp }}
                         type="button"
                         className="btn btn-secondary me-1"
-                        id={`edit-button${index}`}
+                        id={`edit-button${emp?.id}`}
                       >
                         <i className="fa-regular fa-pen-to-square"></i>
                       </Link>
@@ -119,14 +125,14 @@ export const Projects = () => {
                       <button
                         type="button"
                         className="btn btn-danger"
-                        id={`delete-button${index}`}
+                        id={`delete-button${emp?.id}`}
                         data-bs-toggle="modal"
                         data-bs-target="#deleteModal"
-                        onClick={() => setClicked(project.project_id)}
+                        onClick={() => setClicked(emp?.id)}
                       >
                         <i
                           className="fa-solid fa-trash"
-                          onClick={() => setClicked(project.project_id)}
+                          onClick={() => setClicked(emp?.project_id)}
                         ></i>
                       </button>
                     </td>
@@ -135,46 +141,6 @@ export const Projects = () => {
               })}
             </tbody>
           </table>
-        </div>
-      </div>
-      {/* Delete modal */}
-      <div
-        className="modal fade"
-        id="deleteModal"
-        tabIndex="-1"
-        aria-labelledby="exampleModalLabel"
-        aria-hidden="true"
-      >
-        <div className="modal-dialog">
-          <div className="modal-content">
-            <div className="modal-header">
-              <button
-                type="button"
-                className="btn-close"
-                data-bs-dismiss="modal"
-                aria-label="Close"
-              ></button>
-            </div>
-            <div className="modal-body">
-              Are you sure you want to delete this project? This can't be undone
-            </div>
-            <div className="modal-footer">
-              <button
-                type="button"
-                className="btn btn-secondary"
-                data-bs-dismiss="modal"
-              >
-                Close
-              </button>
-              <button
-                type="button"
-                className="btn btn-danger"
-                onClick={handleDelete}
-              >
-                Yes, delete this project
-              </button>
-            </div>
-          </div>
         </div>
       </div>
     </>
