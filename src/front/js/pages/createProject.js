@@ -1,10 +1,11 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { Context } from "../store/appContext";
 import { EmployeeList } from "../component/EmployeeList.jsx";
 import { Link, useNavigate } from "react-router-dom";
 
 export const Create_project = () => {
   const { actions, store } = useContext(Context);
+  const { token } = store;
   let navigate = useNavigate();
   const [project, setProject] = useState({
     project_name: "",
@@ -35,6 +36,12 @@ export const Create_project = () => {
       navigate("/projects");
     }
   }
+
+  useEffect(() => {
+    if (!token) {
+      navigate("/");
+    }
+  }, []);
 
   return (
     <>
