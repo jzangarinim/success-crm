@@ -20,13 +20,13 @@ useEffect(() => {
       try {
         let response = await fetch(`${process.env.BACKEND_URL}/api/projects`);
         let data = await response.json();
-          return console.log(data);
+        console.log(data);
+        setProject(data);
 
-          setProject(data);
       } catch (error) {
         console.log(error);
       }
-    };
+    }
     getProject();
   } 
 }, []);
@@ -43,19 +43,24 @@ useEffect(() => {
             <i className="fa-solid fa-arrow-left"></i>
           </Link>
         </div>
-        <div className="col 12 ">          
-          <div className="card m-4">
-            <h5 className="card-header">Project Name: {project.project_name}</h5>
-            <div className="card-body">
-              <h5 className="card-title">Description: {project.description}</h5>
-              <p className="card-text">
-                Account Manager: {project.account_manager_id}
-              </p>
-              <p className="card-text">Assistant: {project.assistant_id}</p>
-              <p className="card-text">Customer: {project.customer_id}</p>
-              <p className="card-text">Created at: {project.created_at}</p>
-            </div>
-          </div>
+        <div className="col 12 "> 
+        {project.map((project, index) => {
+              return (
+                <div className="card m-4">
+                  <h5 className="card-header">Project Name: {project.project_name}</h5>
+                  <div className="card-body">
+                    <h5 className="card-title">Description: {project.description}</h5>
+                    <p className="card-text">
+                      Account Manager: {project.account_manager_id}
+                    </p>
+                    <p className="card-text">Assistant: {project.assistant_id}</p>
+                    <p className="card-text">Customer: {project.customer_id}</p>
+                    <p className="card-text">Created at: {project.created_at}</p>
+                  </div>
+                </div>
+              );
+            })}         
+          
         </div>
       </div>
     </>
