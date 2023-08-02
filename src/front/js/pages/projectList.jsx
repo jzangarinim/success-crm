@@ -8,21 +8,21 @@ export const One_project = () => {
   const [project, setProject] = useState([]);
   const { store } = useContext(Context);
   const { token } = store;
+  let { project_id } = useParams();
 
-function handleProject(event, str) {
-  event.target.project_id === `${str}-button`
-}
+  function handleProject(project_id) {
+    navigate(`/projects/${project_id}`);
+  }
 
 useEffect(() => {
 
   if (token) {
     const getProject = async () => {
       try {
-        let response = await fetch(`${process.env.BACKEND_URL}/api/projects`);
+        let response = await fetch(`${process.env.BACKEND_URL}/api/projects/${project_id}`);
         let data = await response.json();
-        console.log(data);
         setProject(data);
-
+        console.log(data)
       } catch (error) {
         console.log(error);
       }
@@ -44,23 +44,18 @@ useEffect(() => {
           </Link>
         </div>
         <div className="col 12 "> 
-        {project.map((project, index) => {
-              return (
-                <div className="card m-4">
-                  <h5 className="card-header">Project Name: {project.project_name}</h5>
-                  <div className="card-body">
-                    <h5 className="card-title">Description: {project.description}</h5>
-                    <p className="card-text">
-                      Account Manager: {project.account_manager_id}
-                    </p>
-                    <p className="card-text">Assistant: {project.assistant_id}</p>
-                    <p className="card-text">Customer: {project.customer_id}</p>
-                    <p className="card-text">Created at: {project.created_at}</p>
-                  </div>
-                </div>
-              );
-            })}         
-          
+          <div className="card m-4">
+            <h5 className="card-header">Project Name: {project.project_name}</h5>
+            <div className="card-body">
+              <h5 className="card-title">Description: {project.description}</h5>
+              <p className="card-text">
+                Account Manager: {project.account_manager_id}
+              </p>
+              <p className="card-text">Assistant: {project.assistant_id}</p>
+              <p className="card-text">Customer: {project.customer_id}</p>
+              <p className="card-text">Created at: {project.start_date}</p>
+            </div>
+          </div>
         </div>
       </div>
     </>
