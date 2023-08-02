@@ -1,16 +1,15 @@
 import React, { useContext } from "react";
 import { Context } from "../store/appContext";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 export const Navbar = () => {
-  let navigate = useNavigate();
   const { store } = useContext(Context);
   const { token } = store;
 
   function handleLogout() {
     localStorage.removeItem("token");
     localStorage.removeItem("role");
-    navigate("/");
+    window.location.reload();
   }
 
   return (
@@ -55,7 +54,7 @@ export const Navbar = () => {
               </Link>
             </li>
           </ul>
-          <div className={!token ? "d-none" : ""}>
+          <div className={!token ? "d-none" : "d-inline"}>
             <button
               type="button"
               className="btn btn-danger"
