@@ -6,19 +6,20 @@ import "../../styles/projects.css";
 export const Projects = () => {
   let navigate = useNavigate();
   const [data, setData] = useState([]);
-  const { store } = useContext(Context);
+  const [clicked, setClicked] = useState("");
+  const { store, actions } = useContext(Context);
+  const { deleteProject } = actions;
   const { user, token } = store;
 
   function handleProjectClick(id) {
     navigate(`/projects/${id}`);
   }
-  function handleDelete(event) {
-    if (
-      event.target.id.includes("delete") ||
-      event.target.parentNode.id.includes("delete")
-    ) {
-      if (user.role === "Admin") {
-        console.log("You have permission to delete");
+  async function handleDelete() {
+    if (user.role === "Admin") {
+      let response = deleteProject(clicked);
+      if (response) {
+        setClicked("");
+        window.location.reload();
       }
     }
   }
@@ -107,6 +108,7 @@ export const Projects = () => {
                         user.role != "Admin" ? "d-none" : ""
                       }`}
                     >
+                      {/* Edit button */}
                       <Link
                         to={`/projects/edit/${project.project_id}`}
                         state={{ data: project }}
@@ -116,13 +118,19 @@ export const Projects = () => {
                       >
                         <i className="fa-regular fa-pen-to-square"></i>
                       </Link>
+                      {/* Delete button */}
                       <button
                         type="button"
                         className="btn btn-danger"
                         id={`delete-button${index}`}
-                        onClick={handleDelete}
+                        data-bs-toggle="modal"
+                        data-bs-target="#deleteModal"
+                        onClick={() => setClicked(project.project_id)}
                       >
-                        <i className="fa-solid fa-trash"></i>
+                        <i
+                          className="fa-solid fa-trash"
+                          onClick={() => setClicked(project.project_id)}
+                        ></i>
                       </button>
                     </td>
                   </tr>
@@ -130,6 +138,46 @@ export const Projects = () => {
               })}
             </tbody>
           </table>
+        </div>
+      </div>
+      {/* Delete modal */}
+      <div
+        className="modal fade"
+        id="deleteModal"
+        tabIndex="-1"
+        aria-labelledby="exampleModalLabel"
+        aria-hidden="true"
+      >
+        <div className="modal-dialog">
+          <div className="modal-content">
+            <div className="modal-header">
+              <button
+                type="button"
+                className="btn-close"
+                data-bs-dismiss="modal"
+                aria-label="Close"
+              ></button>
+            </div>
+            <div className="modal-body">
+              Are you sure you want to delete this project? This can't be undone
+            </div>
+            <div className="modal-footer">
+              <button
+                type="button"
+                className="btn btn-secondary"
+                data-bs-dismiss="modal"
+              >
+                Close
+              </button>
+              <button
+                type="button"
+                className="btn btn-danger"
+                onClick={handleDelete}
+              >
+                Yes, delete this project
+              </button>
+            </div>
+          </div>
         </div>
       </div>
     </>
