@@ -10,7 +10,6 @@ const getState = ({ getStore, getActions, setStore }) => {
         role: localStorage.getItem("role") || null,
       },
       token: localStorage.getItem("token") || null,
-
     },
     actions: {
       Project: async (
@@ -125,6 +124,19 @@ const getState = ({ getStore, getActions, setStore }) => {
                 start_date: `${startDate}`,
                 end_date: `${endDate}`,
               }),
+            }
+          );
+          if (response.ok) {
+            return true;
+          }
+        } catch (error) {}
+      },
+      deleteProject: async (id) => {
+        try {
+          let response = await fetch(
+            `${process.env.BACKEND_URL}/api/projects/${id}`,
+            {
+              method: "DELETE",
             }
           );
           if (response.ok) {

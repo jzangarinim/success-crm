@@ -287,3 +287,24 @@ def add_project():
         except Exception as error:
             print(error)
             return jsonify({"message": error.args}), 500
+
+@api.route('/projects/<int:project_id>', methods=['DELETE'])
+def delete_project(project_id = None):
+    if project_id is not None:
+        project = Project.query.get(project_id)
+        if project is None:
+            return jsonify({"message":"project not found"}), 404
+        else:
+            db.session.delete(project)
+
+            try:
+                db.session.commit()
+                return jsonify("Project successfully deleted"), 204
+
+            except Exception as error:
+                return jsonify({"message":f"error {error.args}"}), 500
+
+    else:
+        return jsonify({"message":"bad request"}), 400
+        
+    return jsonify([]), 200
