@@ -3,7 +3,7 @@ from api.models import db, User, Customer, Project
 from api.utils import generate_sitemap, APIException
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
-import cloudinary.uploader as upload
+import cloudinary.uploader as uploader
 
 api = Blueprint('api', __name__)
 
@@ -90,7 +90,7 @@ def add_user():
             "department": data_form.get("department"),
             "city": data_form.get("city"),
             "country": data_form.get("country"),
-            "avatar": data_file.get("avatar"),
+            "avatar": data_file.get("avatar")
         }
 
         if data.get("email") is None:

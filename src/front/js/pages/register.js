@@ -6,7 +6,8 @@ import { Link, useNavigate } from "react-router-dom";
 export const Register_user = () => {
   let navigate = useNavigate();
   const { actions, store } = useContext(Context);
-  const [user, setUser] = useState({
+  const [user, setUser] = useState(
+    {
     name: "",
     last_name: "",
     email: "",
@@ -15,40 +16,33 @@ export const Register_user = () => {
     city: "",
     country: "",
     avatar: ""
-  });
+  }
+  );
 
   const handleChange = (event) => {
     setUser({ ...user, [event.target.name]: event.target.value });
   };
 
   async function handleRegister() {
-    const formData = new FormData()
-    formData.append("nameInput", user.name)
-    formData.append("last_nameInput", user.last_name)
-    formData.append("emailInput", user.email)
-    formData.append("departmentSelect", user.department)
-    formData.append("cityInput", user.city)
-    formData.append("countryInput", user.country)
-    formData.append("passwordInput", user.password)
-    formData.append("avatar", user.avatar)
-    // let name = document.getElementById("nameInput").value;
-    // let lastName = document.getElementById("last_nameInput").value;
-    // let email = document.getElementById("emailInput").value;
-    // let department = document.getElementById("departmentSelect").value;
-    // let city = document.getElementById("cityInput").value;
-    // let country = document.getElementById("countryInput").value;
-    // let password = document.getElementById("passwordInput").value;
-    // let avatar = document.getElementById("avatar").value;
-    const response = actions.Register(formData);
-    //   email,
-    //   password,
-    //   department,
-    //   name,
-    //   lastName,
-    //   city,
-    //   country,
-    //   avatar
-    // );
+    let name = document.getElementById("nameInput").value;
+    let lastName = document.getElementById("last_nameInput").value;
+    let email = document.getElementById("emailInput").value;
+    let department = document.getElementById("departmentSelect").value;
+    let city = document.getElementById("cityInput").value;
+    let country = document.getElementById("countryInput").value;
+    let password = document.getElementById("passwordInput").value;
+    let avatar = document.getElementById("avatar").value;
+
+    let response = actions.Register(
+      email,
+      password,
+      department,
+      name,
+      lastName,
+      city,
+      country,
+      avatar
+    );
     if (response) {
       navigate("/login");
     }
