@@ -3,7 +3,7 @@ from api.models import db, User, Customer, Project
 from api.utils import generate_sitemap, APIException
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
-import cloudinary.uploader as uploader
+import cloudinary.uploader as upload
 
 api = Blueprint('api', __name__)
 

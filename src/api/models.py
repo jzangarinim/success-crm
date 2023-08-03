@@ -41,6 +41,8 @@ class User(db.Model):
     is_active = db.Column(db.Boolean(), unique=False,
                           nullable=False, default=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    avatar = db.Column(db.ImageColumn(
+        size=(300, 300, True), thumbnail_size=(30, 30, True)))
 
     def __repr__(self):
         return f'<User {self.email}>'
