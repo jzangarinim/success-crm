@@ -51,13 +51,13 @@ const getState = ({ getStore, getActions, setStore }) => {
         name,
         last_name,
         city,
-        country
+        country,
+        avatar
       ) => {
         try {
           let response = await fetch(`${process.env.BACKEND_URL}/api/users`, {
             method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
+            body:({
               email: `${email}`,
               password: `${password}`,
               department: `${department}`,
@@ -65,6 +65,7 @@ const getState = ({ getStore, getActions, setStore }) => {
               last_name: `${last_name}`,
               city: `${city}`,
               country: `${country}`,
+              avatar : `${avatar}`,
             }),
           });
           if (response.ok) {

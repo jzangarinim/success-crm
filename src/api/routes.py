@@ -3,6 +3,7 @@ from api.models import db, User, Customer, Project
 from api.utils import generate_sitemap, APIException
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
+import cloudinary.uploader as uploader
 
 api = Blueprint('api', __name__)
 
@@ -79,7 +80,18 @@ def get_department(department=None):
 @api.route('/users', methods=['POST'])
 def add_user():
     if request.method == "POST":
-        data = request.json
+        data_form = request.form
+        data_file = request.files
+        data = {
+            "name": data_form.get("name"),
+            "last_name": data_form.get("last_name"),
+            "email": data_form.get("email"),
+            "password": data_form.get("password"),
+            "department": data_form.get("department"),
+            "city": data_form.get("city"),
+            "country": data_form.get("country"),
+            "avatar": data_file.get("avatar"),
+        }
 
         if data.get("email") is None:
             return jsonify({"message": "Wrong property"}), 400
@@ -100,13 +112,16 @@ def add_user():
         if user is not None:
             return jsonify({"message": "The user all ready exist"})
 
-        if user is None:
-            password = set_password(data.get("password"))
-            user = User(email=data["email"], password=password,
-                        department=data["department"], name=data["name"],
-                        last_name=data["last_name"], city=data["city"],
-                        country=data["country"])
-            db.session.add(user)
+        password = set_password(data.get("password"))
+
+        response.image = uploader.upload(data.get("avatar"))
+        data.update({"avatar": response_image.get("url")})
+
+        user = User(email=data["email"], password=password,
+                    department=data["department"], name=data["name"],
+                    last_name=data["last_name"], city=data["city"],
+                    country=data["country"], avatar=data["avatar"])
+        db.session.add(user)
 
             try:
                 db.session.commit()
@@ -116,8 +131,9 @@ def add_user():
                 print(error)
                 return jsonify({"message": error.args}), 500
 
+
 @api.route('/users/<int:user_id>', methods=['PUT'])
-def edit_user(user_id = None):
+def edit_user(user_id=None):
     if user_id is not None:
         body = request.json
         user = User.query.get(user_id)
@@ -153,7 +169,8 @@ def edit_user(user_id = None):
             return jsonify({"message": error.args}), 500
 
     else:
-        return jsonify({"message":"bad request"}), 400
+        return jsonify({"message": "bad request"}), 400
+
 
 @api.route('/login', methods=['POST'])
 def handle_login():
@@ -332,12 +349,13 @@ def add_project():
             print(error)
             return jsonify({"message": error.args}), 500
 
+
 @api.route('/projects/<int:project_id>', methods=['DELETE'])
-def delete_project(project_id = None):
+def delete_project(project_id=None):
     if project_id is not None:
         project = Project.query.get(project_id)
         if project is None:
-            return jsonify({"message":"project not found"}), 404
+            return jsonify({"message": "project not found"}), 404
         else:
             db.session.delete(project)
 
@@ -346,9 +364,9 @@ def delete_project(project_id = None):
                 return jsonify("Project successfully deleted"), 204
 
             except Exception as error:
-                return jsonify({"message":f"error {error.args}"}), 500
+                return jsonify({"message": f"error {error.args}"}), 500
 
     else:
-        return jsonify({"message":"bad request"}), 400
-        
+        return jsonify({"message": "bad request"}), 400
+
     return jsonify([]), 200

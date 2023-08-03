@@ -14,6 +14,7 @@ export const Register_user = () => {
     department: "",
     city: "",
     country: "",
+    avatar: ""
   });
 
   const handleChange = (event) => {
@@ -21,22 +22,33 @@ export const Register_user = () => {
   };
 
   async function handleRegister() {
-    let name = document.getElementById("nameInput").value;
-    let lastName = document.getElementById("last_nameInput").value;
-    let email = document.getElementById("emailInput").value;
-    let department = document.getElementById("departmentSelect").value;
-    let city = document.getElementById("cityInput").value;
-    let country = document.getElementById("countryInput").value;
-    let password = document.getElementById("passwordInput").value;
-    let response = actions.Register(
-      email,
-      password,
-      department,
-      name,
-      lastName,
-      city,
-      country
-    );
+    const formData = new FormData()
+    formData.append("nameInput", user.name)
+    formData.append("last_nameInput", user.last_name)
+    formData.append("emailInput", user.email)
+    formData.append("departmentSelect", user.department)
+    formData.append("cityInput", user.city)
+    formData.append("countryInput", user.country)
+    formData.append("passwordInput", user.password)
+    formData.append("avatar", user.avatar)
+    // let name = document.getElementById("nameInput").value;
+    // let lastName = document.getElementById("last_nameInput").value;
+    // let email = document.getElementById("emailInput").value;
+    // let department = document.getElementById("departmentSelect").value;
+    // let city = document.getElementById("cityInput").value;
+    // let country = document.getElementById("countryInput").value;
+    // let password = document.getElementById("passwordInput").value;
+    // let avatar = document.getElementById("avatar").value;
+    const response = actions.Register(formData);
+    //   email,
+    //   password,
+    //   department,
+    //   name,
+    //   lastName,
+    //   city,
+    //   country,
+    //   avatar
+    // );
     if (response) {
       navigate("/login");
     }
@@ -52,7 +64,7 @@ export const Register_user = () => {
     <>
       <div className="container">
         <div className="col 12 mt-3">
-          <div className="row mb-3">
+          <div className="form-group mt-3">
             <label htmlFor="nameInput" className="form-label">
               First Name
             </label>
@@ -67,7 +79,7 @@ export const Register_user = () => {
               onChange={handleChange}
             />
           </div>
-          <div className="row mb-3">
+          <div className="form-group mt-3">
             <label htmlFor="lastNameInput" className="form-label">
               Last Name
             </label>
@@ -82,7 +94,7 @@ export const Register_user = () => {
               onChange={handleChange}
             />
           </div>
-          <div className="row mb-3">
+          <div className="form-group mt-3">
             <label htmlFor="emailInput" className="form-label">
               Email address
             </label>
@@ -97,9 +109,9 @@ export const Register_user = () => {
               onChange={handleChange}
             />
           </div>
-          <div className="row mb-8 btn-group">
-            <label htmlFor="departmentInput" className="form-label">
-              Department
+          <div className="form-group mt-3 btn-group ">
+            <label htmlFor="departmentInput" className="form-label m-3">
+              Department  
             </label>
             <select
               className="form-select"
@@ -144,7 +156,7 @@ export const Register_user = () => {
               </option>
             </select>
           </div>
-          <div className="row mb-3">
+          <div className="form-group mt-3">
             <label htmlFor="cityInput" className="form-label">
               City
             </label>
@@ -159,7 +171,7 @@ export const Register_user = () => {
               onChange={handleChange}
             />
           </div>
-          <div className="row mb-3">
+          <div className="form-group mt-3">
             <label htmlFor="countryInput" className="form-label">
               Country
             </label>
@@ -174,7 +186,7 @@ export const Register_user = () => {
               onChange={handleChange}
             />
           </div>
-          <div className="row mb-3">
+          <div className="form-group mt-3">
             <label htmlFor="passwordInput" className="form-label">
               Password
             </label>
@@ -195,7 +207,17 @@ export const Register_user = () => {
             </div>
           </div>
         </div>
-        <div className="row d-flex justify-content-end">
+        <div className="form-group mt-3">
+          <label htmlFor="avatar">Ingresa tu imagen</label>
+          <input
+          type="file"
+          className="form-control"
+          id="avatar"
+          name="avatar"
+          onChange={handleChange}
+          />
+        </div>
+        <div className="row d-flex justify-content-end mt-3">
           <button className="col-2 ms-3 me-2">
             <Link to="/login">Go back to Login</Link>
           </button>
