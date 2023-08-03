@@ -37,7 +37,7 @@ export const Dashboard = () => {
                 Go to Customers
               </Link>
               <Link
-                to="/admin"
+                to="/administrator"
                 className={`btn btn-success ${
                   user.role === "Admin" ? "" : "d-none"
                 }`}

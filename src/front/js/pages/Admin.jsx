@@ -118,7 +118,7 @@ export const Admin = () => {
                     <td className="d-flex justify-content-center">
                       {/* Edit button */}
                       <Link
-                        to={`/admin/edit/${emp?.id}`}
+                        to={`/administrator/edit/${emp?.id}`}
                         state={{ data: emp }}
                         type="button"
                         className="btn btn-secondary me-1"

@@ -45,7 +45,7 @@ const Layout = () => {
             <Route element={<ViewEmployee />} path="/employees/:id" />
             <Route element={<One_project />} path="/projects/:project_id" />
             <Route element={<Customers />} path="/customers" />
-            <Route element={<Admin />} path="/admin" />
+            <Route element={<Admin />} path="/administrator" />
             <Route element={<h1>Not found!</h1>} />
           </Routes>
           <Footer />
