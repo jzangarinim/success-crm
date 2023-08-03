@@ -194,7 +194,7 @@ def add_customer():
         if data.get("representative_contact") is None:
             return jsonify({"message": "Wrong property"}), 400
 
-        customer = User.query.filter_by(
+        customer = Customer.query.filter_by(
             company_name=data.get("company_name")).first()
         if customer is not None:
             return jsonify({"message": "The user all ready exist"})
