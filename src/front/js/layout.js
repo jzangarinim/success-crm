@@ -3,26 +3,24 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import ScrollToTop from "./component/scrollToTop";
 import { BackendURL } from "./component/backendURL";
 
-import { Home } from "./pages/home";
-import { Demo } from "./pages/demo";
-import { Register } from "./pages/register";
-import { Single } from "./pages/single";
+import { Home } from "./pages/home.js";
+import { Register_user } from "./pages/register.js";
 import { Projects } from "./pages/Projects.jsx";
 import { EditProject } from "./pages/EditProject.jsx";
 import { Employees } from "./pages/Employees.jsx";
+import { ViewEmployee } from "./pages/ViewEmployee.jsx";
 import { Customers } from "./pages/Customers.jsx";
-import injectContext from "./store/appContext";
-
+import { Admin } from "./pages/Admin.jsx";
+import injectContext from "./store/appContext.js";
+import { Login } from "./pages/login.js";
 import { Navbar } from "./component/navbar";
 import { Footer } from "./component/footer";
-import LoginPage from "./pages/LoginPage";
-import { Create_project } from "./pages/createProject";
 
-//create your first component
+import { One_project, ProjectList } from "./pages/projectList.jsx";
+import { Create_project } from "./pages/createProject";
+import { Dashboard } from "./pages/dashboard.js";
+
 const Layout = () => {
-  //the basename is used when your project is published in a subdirectory and not in the root of the domain
-  // you can set the basename on the .env file located at the root of this project, E.g: BASENAME=/react-hello-webapp/
-  // const basename = process.env.BASENAME || "";
   const basename = process.env.BASENAME || "";
   if (!process.env.BACKEND_URL || process.env.BACKEND_URL == "")
     return <BackendURL />;
@@ -34,18 +32,20 @@ const Layout = () => {
           <Navbar />
           <Routes>
             <Route element={<Home />} path="/" />
-            <Route element={<LoginPage />} path="/login" />
-            <Route element={<Register />} path="/register" />
-            <Route element={<Demo />} path="/demo" />
+            <Route element={<Login />} path="/login" />
+            <Route element={<Register_user />} path="/register" />
             <Route element={<Projects />} path="/projects" />
+            <Route element={<Dashboard />} path="/dashboard" />
             <Route element={<Create_project />} path="/projects/create" />
             <Route
               element={<EditProject />}
               path="/projects/edit/:project_id"
             />
             <Route element={<Employees />} path="/employees" />
+            <Route element={<ViewEmployee />} path="/employees/:id" />
+            <Route element={<One_project />} path="/projects/:project_id" />
             <Route element={<Customers />} path="/customers" />
-            <Route element={<Single />} path="/single/:theid" />
+            <Route element={<Admin />} path="/admin" />
             <Route element={<h1>Not found!</h1>} />
           </Routes>
           <Footer />
