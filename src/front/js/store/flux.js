@@ -75,6 +75,46 @@ const getState = ({ getStore, getActions, setStore }) => {
         }
       },
 
+      editUser: async (id, original, edited) => {
+        try {
+          let response = await fetch(
+            `${process.env.BACKEND_URL}/api/users/${id}`,
+            {
+              method: "PUT",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                name: `${edited.name ? edited.name : original.name}`,
+                last_name: `${
+                  edited.last_name ? edited.last_name : original.last_name
+                }`,
+                department: `${
+                  edited.department ? edited.department : original.department
+                }`,
+                role: `${edited.role ? edited.role : original.role}`,
+                hourly_rate: `${
+                  edited.hourly_rate ? edited.hourly_rate : original.hourly_rate
+                }`,
+                weekly_availability: `${
+                  edited.weekly_availability
+                    ? edited.weekly_availability
+                    : original.weekly_availability
+                }`,
+                city: `${edited.city ? edited.city : original.city}`,
+                country: `${
+                  edited.country ? edited.country : original.country
+                }`,
+                is_active: `${
+                  edited.is_active ? edited.is_active : original.is_active
+                }`,
+              }),
+            }
+          );
+          if (response.ok) {
+            return true;
+          }
+        } catch (error) {}
+      },
+
       Login: async (email, password) => {
         const store = getStore();
         try {

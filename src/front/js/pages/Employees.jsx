@@ -2,6 +2,7 @@ import React, { useState, useEffect, useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Context } from "../store/appContext";
 import profilePicture from "../../img/Default_pfp.jpg";
+import { BackButton } from "../component/BackButton.jsx";
 
 export const Employees = () => {
   let navigate = useNavigate();
@@ -62,11 +63,7 @@ export const Employees = () => {
     <>
       <div className="container">
         <div className="row">
-          <div className="row col-1 mb-3 mt-3">
-            <Link type="button" className="btn btn-success p-0" to="/dashboard">
-              <i className="fa-solid fa-arrow-left"></i>
-            </Link>
-          </div>
+          <BackButton />
           <div className="col-12 d-flex flex-wrap justify-content-center">
             <div className="col-8 mt-3 d-flex justify-content-center align-items-center">
               <h1>Departments:</h1>

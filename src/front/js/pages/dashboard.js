@@ -36,6 +36,15 @@ export const Dashboard = () => {
               <Link to="/customers" className="btn btn-success" type="button">
                 Go to Customers
               </Link>
+              <Link
+                to="/admin"
+                className={`btn btn-success ${
+                  user.role === "Admin" ? "" : "d-none"
+                }`}
+                type="button"
+              >
+                Go to Admin
+              </Link>
             </div>
           </div>
         </div>

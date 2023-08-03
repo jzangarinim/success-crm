@@ -2,6 +2,7 @@ import React, { useState, useEffect, useContext } from "react";
 import { Context } from "../store/appContext";
 import { Link, useNavigate } from "react-router-dom";
 import profilePicture from "../../img/Default_pfp.jpg";
+import { BackButton } from "../component/BackButton.jsx";
 
 export const Customers = () => {
   const [customers, setCustomers] = useState([]);
@@ -34,11 +35,7 @@ export const Customers = () => {
   return (
     <>
       <div className="container">
-        <div className="row col-1 mb-3 mt-3">
-          <Link type="button" className="btn btn-success p-0" to="/dashboard">
-            <i className="fa-solid fa-arrow-left"></i>
-          </Link>
-        </div>
+        <BackButton />
         <div className="row">
           <div className="col-12 d-flex flex-wrap justify-content-center">
             {customers.map((customer, index) => {

@@ -10,6 +10,7 @@ import { EditProject } from "./pages/EditProject.jsx";
 import { Employees } from "./pages/Employees.jsx";
 import { ViewEmployee } from "./pages/ViewEmployee.jsx";
 import { Customers } from "./pages/Customers.jsx";
+import { Admin } from "./pages/Admin.jsx";
 import injectContext from "./store/appContext.js";
 import { Login } from "./pages/login.js";
 import { Navbar } from "./component/navbar";
@@ -44,6 +45,7 @@ const Layout = () => {
             <Route element={<ViewEmployee />} path="/employees/:id" />
             <Route element={<One_project />} path="/projects/:project_id" />
             <Route element={<Customers />} path="/customers" />
+            <Route element={<Admin />} path="/admin" />
             <Route element={<h1>Not found!</h1>} />
           </Routes>
           <Footer />

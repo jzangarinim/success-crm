@@ -2,6 +2,7 @@ import React, { useState, useEffect, useContext } from "react";
 import { Context } from "../store/appContext";
 import { EmployeeList } from "../component/EmployeeList.jsx";
 import { Link, useNavigate } from "react-router-dom";
+import { BackButton } from "../component/BackButton.jsx";
 
 export const Create_project = () => {
   const { actions, store } = useContext(Context);
@@ -46,11 +47,7 @@ export const Create_project = () => {
   return (
     <>
       <div className="container">
-        <div className="row col-1 mb-3 mt-3">
-          <Link type="button" className="btn btn-success p-0" to="/projects">
-            <i className="fa-solid fa-arrow-left"></i>
-          </Link>
-        </div>
+        <BackButton />
         <div className="mb-3">
           <label htmlFor="project_nameInput" className="form-label">
             Project Name

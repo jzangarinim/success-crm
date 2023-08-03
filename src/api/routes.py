@@ -116,6 +116,44 @@ def add_user():
                 print(error)
                 return jsonify({"message": error.args}), 500
 
+@api.route('/users/<int:user_id>', methods=['PUT'])
+def edit_user(user_id = None):
+    if user_id is not None:
+        body = request.json
+        user = User.query.get(user_id)
+
+        if body.get("name") is not None:
+            user.name = body.get("name")
+        if body.get("last_name") is not None:
+            user.last_name = body.get("last_name")
+        if body.get("department") is not None:
+            user.department = body.get("department")
+        if body.get("role") is not None:
+            user.role = body.get("role")
+        if body.get("hourly_rate") is not None:
+            if body.get("role") == "Virtual Assistant":
+                user.hourly_rate = body.get("hourly_rate")
+            else:
+                user.hourly_rate = None
+        if body.get("weekly_availability") is not None:
+            if body.get("role") == "Virtual Assistant":
+                user.weekly_availability = body.get("weekly_availability")
+            else:
+                user.weekly_availability = None
+        if body.get("city") is not None:
+            user.city = body.get("city")
+        if body.get("country") is not None:
+            user.country = body.get("country")
+
+        try:
+            db.session.commit()
+            return jsonify(user.serialize()), 200
+        except Exception as error:
+            print(error)
+            return jsonify({"message": error.args}), 500
+
+    else:
+        return jsonify({"message":"bad request"}), 400
 
 @api.route('/login', methods=['POST'])
 def handle_login():

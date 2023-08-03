@@ -2,6 +2,7 @@ import React, { useState, useEffect, useContext } from "react";
 import { Context } from "../store/appContext";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import profilePicture from "../../img/Default_pfp.jpg";
+import { BackButton } from "../component/BackButton.jsx";
 
 export const ViewEmployee = () => {
   let navigate = useNavigate();
@@ -44,15 +45,7 @@ export const ViewEmployee = () => {
   return (
     <>
       <div className="container-fluid col-7 mt-3">
-        <div className="row col-1 mb-3">
-          <Link
-            to={`/employees/`}
-            type="button"
-            className="btn btn-success p-0"
-          >
-            <i className="fa-solid fa-arrow-left"></i>
-          </Link>
-        </div>
+        <BackButton />
         <div className="row">
           <div className="card mb-3 p-0 border border-warning">
             <div className="card-body">
@@ -91,15 +84,21 @@ export const ViewEmployee = () => {
                   <div className="text-body-secondary mb-3 me-3">
                     ► Role: {employee?.role}
                   </div>
-                  <div className="text-body-secondary mb-3 me-3">
-                    ► Hourly rate:{" "}
-                    {employee?.role === "Virtual Assistant"
-                      ? employee?.hourly_rate
-                      : "N/A"}
+                  <div
+                    className={`text-body-secondary mb-3 me-3 ${
+                      employee?.role === "Virtual Assistant" ? "" : "d-none"
+                    }`}
+                  >
+                    ► Hourly rate (USD):{" "}
+                    {employee?.hourly_rate ? employee?.hourly_rate : "N/A"}
                   </div>
-                  <div className="text-body-secondary mb-3 me-3">
-                    ► Weekly availability:{" "}
-                    {employee?.role === "Virtual Assistant"
+                  <div
+                    className={`text-body-secondary mb-3 me-3 ${
+                      employee?.role === "Virtual Assistant" ? "" : "d-none"
+                    }`}
+                  >
+                    ► Weekly availability (hours):{" "}
+                    {employee?.weekly_availability
                       ? employee?.weekly_availability
                       : "N/A"}
                   </div>
